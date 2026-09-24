@@ -146,8 +146,8 @@ public sealed partial class TTWarsServerPage : Page
             : "BAĞLANTI BEKLİYOR";
 
         ConnectionStateText.Foreground = connected
-            ? (Brush)Application.Current.Resources["TtwenSuccessBrush"]
-            : (Brush)Application.Current.Resources["TtwenWarningBrush"];
+            ? (Brush)Microsoft.UI.Xaml.Application.Current.Resources["TtwenSuccessBrush"]
+            : (Brush)Microsoft.UI.Xaml.Application.Current.Resources["TtwenWarningBrush"];
 
         ConnectionDot.Fill = ConnectionStateText.Foreground;
         DisconnectButton.IsEnabled = connected;
