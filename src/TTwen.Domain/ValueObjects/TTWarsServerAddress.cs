@@ -38,8 +38,9 @@ public readonly record struct TTWarsServerAddress
 
         var value = input.Trim();
 
-        if (!value.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
-            && !value.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+        // Şema açıkça verilmişse onu korur; şema yoksa TTWars için HTTPS varsayılır.
+        if (!Uri.TryCreate(value, UriKind.Absolute, out var parsedInput)
+            || string.IsNullOrWhiteSpace(parsedInput.Scheme))
         {
             value = "https://" + value;
         }
