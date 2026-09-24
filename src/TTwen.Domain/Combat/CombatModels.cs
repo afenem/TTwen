@@ -5,7 +5,7 @@ namespace TTwen.Domain.Combat;
 /// <summary>
 /// Saldırıya katılan bir asker tipini ve miktarını tutar.
 /// </summary>
-public sealed record ArmyStack(Troop Troop, int Count);
+public sealed record TroopStack(Troop Troop, int Count);
 
 /// <summary>
 /// Bir savaş simülasyonunun temel sonucudur.
