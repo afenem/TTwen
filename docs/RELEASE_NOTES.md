@@ -1,8 +1,31 @@
 # TTwen Sürüm Notları
 
+## v0.5.1 — Windows Açılış Hotfix + Test Doğrulaması
+
+Durum: Test düzeltmesi hazırlanıyor.
+
+Düzeltmeler:
+
+- WinUI 3 uygulaması için Windows App SDK self-contained dağıtımı etkinleştirildi.
+- Windows x64 publish çıktısının doğrudan çalıştırılmasını doğrulayan startup smoke test eklendi.
+- Test artifact sürümü v0.5.1 olarak güncellendi.
+
+Test hedefi:
+
+Önceki v0.5.0 test paketinde bazı sistemlerde EXE'nin pencere göstermeden kapanabilmesine
+neden olabilecek eksik Windows App SDK self-contained ayarı düzeltildi.
+
+v0.5.1 ile kullanıcı testi:
+
+- EXE'nin çift tıklamayla pencere açması.
+- Dashboard ekranının görünmesi.
+- TTWars Sunucu ekranının açılması.
+- Chromium'un bağlantı sırasında başlatılması.
+- Köyler, Binalar ve Kaynak Yönetimi akışlarının çalışması.
+
 ## v0.5.0 — Kaynak Okuyucu + Kaynak Durumu
 
-Durum: Test sürümüne hazırlanıyor.
+Durum: İlk test sürümü.
 
 Eklenenler:
 
@@ -15,7 +38,7 @@ Eklenenler:
 - Düşük stok ve kapasite taşma riski göstergeleri.
 - Eksik HTML alanlarında güvenli bilinmeyen durumları.
 - Kaynak durumu hesaplama unit testleri.
-- Windows x64 self-contained test publish adımı.
+- Windows x64 self-contained test artifact'ı.
 
 Test edilecekler:
 

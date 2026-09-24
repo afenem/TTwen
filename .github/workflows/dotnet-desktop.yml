@@ -4,10 +4,11 @@
 # - Restore all NuGet dependencies.
 # - Build the WinUI 3 application and supporting projects for x64.
 # - Run the automated test suite.
-# - Publish a self-contained Windows x64 test artifact for the current build.
+# - Publish a self-contained Windows x64 test artifact.
+# - Smoke-test that the published WinUI executable starts.
 #
 # This workflow validates the repository; it does not start the bot or keep
-# the desktop application running on GitHub's runner.
+# the desktop application running after the smoke test.
 
 name: TTwen - .NET Desktop CI
 
@@ -25,15 +26,19 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ttwen-ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-and-test:
     name: Build, test and publish TTwen
-    runs-on: windows-latest
+    runs-on: windows-2022
 
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: "1"
       DOTNET_NOLOGO: "true"
-      TTWEN_TEST_VERSION: "0.5.0"
+      TTWEN_TEST_VERSION: "0.5.1"
 
     steps:
       - name: Checkout repository
@@ -62,7 +67,44 @@ jobs:
 
       - name: Publish Windows x64 test build
         shell: pwsh
-        run: dotnet publish src/TTwen.App/TTwen.App.csproj --configuration Release --runtime win-x64 --self-contained true -p:Platform=x64 -p:Version=$env:TTWEN_TEST_VERSION --no-restore --output "artifacts/TTwen-v$env:TTWEN_TEST_VERSION-test"
+        run: dotnet publish src/TTwen.App/TTwen.App.csproj --configuration Release --runtime win-x64 --self-contained true -p:Platform=x64 -p:Version=$env:TTWEN_TEST_VERSION -p:PublishTrimmed=false -p:PublishSingleFile=false -p:PublishReadyToRun=false --no-restore --output "artifacts/TTwen-v$env:TTWEN_TEST_VERSION-test"
+
+      - name: Verify published WinUI resource index
+        shell: pwsh
+        run: |
+          $publishDir = Resolve-Path "artifacts/TTwen-v$env:TTWEN_TEST_VERSION-test"
+          $pri = Get-ChildItem -Path $publishDir -Filter "*.pri" -File -ErrorAction SilentlyContinue
+          if ($pri.Count -eq 0) {
+            throw "Publish çıktısında hiçbir PRI dosyası bulunamadı. WinUI XAML kaynakları çalışamaz."
+          }
+          $projectPriName = "TTwen.App.pri"
+          if (-not (Test-Path (Join-Path $publishDir $projectPriName))) {
+            throw "$projectPriName publish çıktısında bulunamadı."
+          }
+          Write-Host "Bulunan PRI dosyaları:"
+          $pri | Select-Object Name, Length | Format-Table
+
+      - name: Smoke-test published executable
+        shell: pwsh
+        run: |
+          $exe = Join-Path (Resolve-Path "artifacts/TTwen-v$env:TTWEN_TEST_VERSION-test") "TTwen.App.exe"
+          if (-not (Test-Path $exe)) {
+            throw "TTwen.App.exe publish çıktısında bulunamadı."
+          }
+
+          $process = Start-Process -FilePath $exe -PassThru
+          Start-Sleep -Seconds 8
+
+          if ($process.HasExited) {
+            Write-Host "TTwen.App.exe erken kapandı. Son Windows Application olayları:"
+            Get-WinEvent -FilterHashtable @{ LogName = 'Application'; StartTime = (Get-Date).AddSeconds(-30) } -ErrorAction SilentlyContinue |
+              Where-Object { $_.ProviderName -in @('Application Error', 'Windows Error Reporting', '.NET Runtime') } |
+              Select-Object -First 10 TimeCreated, ProviderName, Id, LevelDisplayName, Message |
+              Format-List
+            throw "TTwen.App.exe başlangıç smoke testinde $($process.ExitCode) koduyla kapandı."
+          }
+
+          Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
 
       - name: Package Windows x64 test build
         shell: pwsh
@@ -71,8 +113,8 @@ jobs:
       - name: Upload Windows x64 test artifact
         uses: actions/upload-artifact@v4
         with:
-          name: TTwen-v0.5.0-test-windows-x64
-          path: artifacts/TTwen-v0.5.0-test.zip
+          name: TTwen-v0.5.1-test-windows-x64
+          path: artifacts/TTwen-v0.5.1-test.zip
           if-no-files-found: error
 
       - name: Publish test results

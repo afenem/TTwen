@@ -19,13 +19,13 @@ public sealed partial class ResourcesPage : Page
     private AppServiceProvider? _services;
 
     /// <summary>UI'da gösterilen dört kaynak satırının koleksiyonudur.</summary>
-    public ObservableCollection<ResourceRow> Resources { get; } = new();
+    public ObservableCollection<ResourceRow> ResourceRows { get; } = new();
 
     /// <summary>Kaynak sayfasını oluşturur.</summary>
     public ResourcesPage()
     {
         InitializeComponent();
-        ResourceList.ItemsSource = Resources;
+        ResourceList.ItemsSource = ResourceRows;
     }
 
     /// <inheritdoc />
@@ -118,10 +118,10 @@ public sealed partial class ResourcesPage : Page
                     "dd.MM.yyyy HH:mm:ss",
                     CultureInfo.GetCultureInfo("tr-TR"));
 
-            Resources.Clear();
+            ResourceRows.Clear();
 
             foreach (var resource in VillageResourceStatusCalculator.Analyze(snapshot))
-                Resources.Add(new ResourceRow(resource));
+                ResourceRows.Add(new ResourceRow(resource));
 
             SetStatus(result.Message, result.Success);
             DetailsText.Text = result.Details ?? "Tanılayıcı veri yok.";
