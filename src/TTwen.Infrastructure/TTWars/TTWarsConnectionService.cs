@@ -116,6 +116,47 @@ public sealed class TTWarsConnectionService : ITTWarsConnectionService
     }
 
     /// <inheritdoc />
+    public async Task<TTWarsVillageReadResult> ReadVillageAsync(
+        string villageId,
+        CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(villageId))
+            throw new ArgumentException("Köy kimliği boş olamaz.", nameof(villageId));
+
+        if (!IsConnected || _client is null)
+        {
+            return new TTWarsVillageReadResult(
+                false,
+                Array.Empty<TTwen.Domain.Snapshots.VillageSnapshot>(),
+                1,
+                1,
+                "TTWars bağlantısı açık değil.",
+                "Önce TTWars Sunucu ekranından bağlantı kurun.",
+                DateTimeOffset.UtcNow);
+        }
+
+        try
+        {
+            return await _client.ReadVillageAsync(villageId, cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception exception)
+        {
+            return new TTWarsVillageReadResult(
+                false,
+                Array.Empty<TTwen.Domain.Snapshots.VillageSnapshot>(),
+                1,
+                1,
+                "Seçili köy bilgileri okunamadı.",
+                exception.Message,
+                DateTimeOffset.UtcNow);
+        }
+    }
+
+    /// <inheritdoc />
     public async Task<TTWarsBuildingReadResult> ReadBuildingsAsync(
         string? villageId,
         CancellationToken cancellationToken)

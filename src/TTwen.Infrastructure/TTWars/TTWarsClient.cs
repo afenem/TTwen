@@ -47,6 +47,12 @@ public sealed class TTWarsClient : ITTWarsClient
         => _villageReader.ReadAllAsync(cancellationToken);
 
     /// <inheritdoc />
+    public Task<TTWarsVillageReadResult> ReadVillageAsync(
+        string villageId,
+        CancellationToken cancellationToken)
+        => _villageReader.ReadAsync(villageId, cancellationToken);
+
+    /// <inheritdoc />
     public Task<TTWarsBuildingReadResult> ReadBuildingsAsync(
         string? villageId,
         CancellationToken cancellationToken)

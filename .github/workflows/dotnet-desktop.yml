@@ -4,6 +4,7 @@
 # - Restore all NuGet dependencies.
 # - Build the WinUI 3 application and supporting projects for x64.
 # - Run the automated test suite.
+# - Publish a self-contained Windows x64 test artifact for the current build.
 #
 # This workflow validates the repository; it does not start the bot or keep
 # the desktop application running on GitHub's runner.
@@ -26,12 +27,13 @@ permissions:
 
 jobs:
   build-and-test:
-    name: Build and test TTwen
+    name: Build, test and publish TTwen
     runs-on: windows-latest
 
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: "1"
       DOTNET_NOLOGO: "true"
+      TTWEN_TEST_VERSION: "0.5.0"
 
     steps:
       - name: Checkout repository
@@ -57,6 +59,21 @@ jobs:
 
       - name: Run unit tests
         run: dotnet test tests/TTwen.Tests/TTwen.Tests.csproj --configuration Release --no-restore --no-build --logger "trx;LogFileName=ttwen-tests.trx"
+
+      - name: Publish Windows x64 test build
+        shell: pwsh
+        run: dotnet publish src/TTwen.App/TTwen.App.csproj --configuration Release --runtime win-x64 --self-contained true -p:Platform=x64 -p:Version=$env:TTWEN_TEST_VERSION --no-restore --output "artifacts/TTwen-v$env:TTWEN_TEST_VERSION-test"
+
+      - name: Package Windows x64 test build
+        shell: pwsh
+        run: Compress-Archive -Path "artifacts/TTwen-v$env:TTWEN_TEST_VERSION-test/*" -DestinationPath "artifacts/TTwen-v$env:TTWEN_TEST_VERSION-test.zip" -Force
+
+      - name: Upload Windows x64 test artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TTwen-v0.5.0-test-windows-x64
+          path: artifacts/TTwen-v0.5.0-test.zip
+          if-no-files-found: error
 
       - name: Publish test results
         if: always()

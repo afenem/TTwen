@@ -55,6 +55,12 @@ public sealed partial class MainWindow : Window
                     _services);
                 break;
 
+            case "Resources":
+                ContentFrame.Navigate(
+                    typeof(ResourcesPage),
+                    _services);
+                break;
+
             default:
                 ContentFrame.Navigate(
                     typeof(ModulePlaceholderPage),
