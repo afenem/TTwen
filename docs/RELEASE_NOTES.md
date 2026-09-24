@@ -1,5 +1,18 @@
 # TTwen Sürüm Notları
 
+## v0.5.1 — Windows Test Dağıtımı Düzeltmesi
+
+Durum: Test sürümüne hazırlanıyor.
+
+Düzeltmeler:
+
+- Unpackaged WinUI 3 uygulaması için Windows App SDK self-contained dağıtımı etkinleştirildi.
+- Windows x64 test paketinin hedef makinede Windows App SDK runtime eksikliği nedeniyle sessizce başlamama riskinin giderilmesi hedeflendi.
+- Test artifact sürümü v0.5.1 olarak güncellendi.
+
+Testte ayrıca önceki v0.5.0 kapsamındaki TTWars bağlantısı, köy, bina ve kaynak okuma zinciri tekrar kontrol edilecektir.
+
+
 ## v0.5.0 — Kaynak Okuyucu + Kaynak Durumu
 
 Durum: Test sürümüne hazırlanıyor.
