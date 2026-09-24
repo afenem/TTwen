@@ -54,6 +54,11 @@
                      Foreground="{StaticResource TtwenAccentBrush}"
                      FontSize="15"
                      FontWeight="SemiBold"/>
+          <TextBlock x:Name="StatusText"
+                     Text="Hazır"
+                     Margin="0,4,0,0"
+                     Foreground="{StaticResource TtwenSuccessBrush}"
+                     FontSize="11"/>
         </StackPanel>
 
         <StackPanel Grid.Column="1">
