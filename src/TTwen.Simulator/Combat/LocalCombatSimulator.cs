@@ -21,7 +21,7 @@ public sealed class LocalCombatSimulator : ICombatSimulator
 
     public CombatSimulationResult Simulate(
         Oasis oasis,
-        IReadOnlyCollection<TroopStack> army)
+        IReadOnlyCollection<TroopGroup> army)
     {
         var attackerPower = army.Sum(
             stack => stack.Troop.Attack * stack.Count);
