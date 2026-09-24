@@ -134,6 +134,72 @@ public sealed class TTWarsVillageReader
     }
 
     /// <summary>
+    /// Tek bir köyü hedefleyerek dorf1.php üzerinden canlı snapshot okur.
+    /// </summary>
+    /// <param name="villageId">TTWars köy kimliği.</param>
+    /// <param name="cancellationToken">İşlem iptal belirteci.</param>
+    /// <returns>Tek köy içeren okuma sonucu.</returns>
+    public async Task<TTWarsVillageReadResult> ReadAsync(
+        string villageId,
+        CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(villageId))
+            throw new ArgumentException("Köy kimliği boş olamaz.", nameof(villageId));
+
+        var capturedAtUtc = DateTimeOffset.UtcNow;
+        var originalUrl = _page.Url;
+
+        try
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (await IsLoginPageAsync(cancellationToken))
+            {
+                return Failure(
+                    "TTWars oturumu giriş sayfasında.",
+                    "Tekil köy okunmadan önce TTWars hesabıyla giriş yapılmalıdır.",
+                    capturedAtUtc);
+            }
+
+            await NavigateToVillageAsync(villageId, cancellationToken);
+
+            var pageData = await ReadVillagePageDataAsync(
+                villageId,
+                "Seçili köy",
+                null,
+                cancellationToken);
+
+            var snapshot = TTWarsVillageSnapshotMapper.Map(
+                pageData,
+                capturedAtUtc);
+
+            return new TTWarsVillageReadResult(
+                Success: true,
+                Villages: new[] { snapshot },
+                RequestedCount: 1,
+                FailedCount: 0,
+                Message: "Seçili köy başarıyla okundu.",
+                Details: pageData.Diagnostics,
+                CapturedAtUtc: capturedAtUtc);
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception exception)
+        {
+            return Failure(
+                "Seçili köy okunamadı.",
+                exception.Message,
+                capturedAtUtc);
+        }
+        finally
+        {
+            await RestoreOriginalPageAsync(originalUrl, cancellationToken);
+        }
+    }
+
+    /// <summary>
     /// Mevcut sayfanın giriş sayfası olup olmadığını kontrol eder.
     /// </summary>
     private async Task<bool> IsLoginPageAsync(CancellationToken cancellationToken)
@@ -335,7 +401,7 @@ public sealed class TTWarsVillageReader
                 return Number.isFinite(parsed) ? parsed : null;
               };
 
-              const parseStock = selector => {
+              const readStock = selector => {
                 const node = document.querySelector(selector);
                 if (!node) {
                   return {

@@ -25,6 +25,11 @@ public interface ITTWarsConnectionService : IAsyncDisposable
     Task<TTWarsVillageReadResult> ReadVillagesAsync(
         CancellationToken cancellationToken);
 
+    /// <summary>Seçili köyün tekil canlı snapshot'ını okur.</summary>
+    Task<TTWarsVillageReadResult> ReadVillageAsync(
+        string villageId,
+        CancellationToken cancellationToken);
+
     /// <summary>Seçilen köyün bina snapshot'larını okur.</summary>
     Task<TTWarsBuildingReadResult> ReadBuildingsAsync(
         string? villageId,

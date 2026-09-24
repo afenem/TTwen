@@ -14,6 +14,11 @@ public interface ITTWarsClient
     Task<TTWarsVillageReadResult> ReadVillagesAsync(
         CancellationToken cancellationToken);
 
+    /// <summary>Tek bir seçili köyün canlı dorf1.php snapshot'ını okur.</summary>
+    Task<TTWarsVillageReadResult> ReadVillageAsync(
+        string villageId,
+        CancellationToken cancellationToken);
+
     /// <summary>Aktif veya seçilen köyün bina slotlarını canlı dorf2.php sayfasından okur.</summary>
     Task<TTWarsBuildingReadResult> ReadBuildingsAsync(
         string? villageId,
