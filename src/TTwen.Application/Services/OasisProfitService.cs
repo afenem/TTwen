@@ -27,7 +27,7 @@ public sealed class OasisProfitService
     /// </summary>
     public OasisProfitResult Evaluate(
         Oasis oasis,
-        IReadOnlyCollection<ArmyStack> army,
+        IReadOnlyCollection<TroopGroup> army,
         double roundTripSeconds)
     {
         var combat = _combatSimulator.Simulate(oasis, army);
