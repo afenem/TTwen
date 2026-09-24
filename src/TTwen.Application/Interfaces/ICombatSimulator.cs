@@ -14,5 +14,5 @@ public interface ICombatSimulator
 {
     CombatSimulationResult Simulate(
         Oasis oasis,
-        IReadOnlyCollection<TroopStack> army);
+        IReadOnlyCollection<TroopGroup> army);
 }
