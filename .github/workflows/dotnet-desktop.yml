@@ -38,7 +38,7 @@ jobs:
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: "1"
       DOTNET_NOLOGO: "true"
-      TTWEN_TEST_VERSION: "0.5.1"
+      TTWEN_TEST_VERSION: "0.5.2"
 
     steps:
       - name: Checkout repository
@@ -113,8 +113,8 @@ jobs:
       - name: Upload Windows x64 test artifact
         uses: actions/upload-artifact@v4
         with:
-          name: TTwen-v0.5.1-test-windows-x64
-          path: artifacts/TTwen-v0.5.1-test.zip
+          name: TTwen-v0.5.2-test-windows-x64
+          path: artifacts/TTwen-v0.5.2-test.zip
           if-no-files-found: error
 
       - name: Publish test results
