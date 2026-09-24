@@ -28,8 +28,9 @@ public sealed class PlaywrightBrowserSession : IAsyncDisposable
                 ViewportSize = new ViewportSize { Width = 1440, Height = 900 }
             });
 
-        CurrentPage = _context.Pages.FirstOrDefault()
-            ?? await _context.NewPageAsync();
+        CurrentPage = _context.Pages.Count > 0
+            ? _context.Pages[0]
+            : await _context.NewPageAsync();
     }
 
     public async ValueTask DisposeAsync()
