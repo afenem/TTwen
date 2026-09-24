@@ -1,77 +1,12 @@
 <Window x:Class="TTwen.App.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="TTwen • TTWars Control Center">
+    Title="TTwen">
   <Grid Background="{StaticResource TtwenBackgroundBrush}">
-    <Grid.RowDefinitions>
-      <RowDefinition Height="64"/>
-      <RowDefinition Height="*"/>
-      <RowDefinition Height="28"/>
-    </Grid.RowDefinitions>
-
-    <Grid Grid.Row="0" Background="#090F19">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition/>
-        <ColumnDefinition Width="Auto"/>
-      </Grid.ColumnDefinitions>
-      <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="22,0,0,0">
-        <TextBlock Text="TTWEN"
-                   FontSize="28"
-                   FontWeight="Bold"
-                   Foreground="{StaticResource TtwenAccentBrush}"/>
-        <TextBlock Text="  TTWARS CONTROL CENTER"
-                   Margin="8,9,0,0"
-                   Foreground="#7F91AD"
-                   FontSize="12"/>
-      </StackPanel>
-      <StackPanel Grid.Column="1"
-                  Orientation="Horizontal"
-                  Margin="0,0,22,0"
-                  VerticalAlignment="Center">
-        <Ellipse Width="10"
-                 Height="10"
-                 Fill="{StaticResource TtwenSuccessBrush}"
-                 Margin="0,0,7,0"/>
-        <TextBlock Text="Sistem hazır"
-                   Foreground="{StaticResource TtwenSuccessBrush}"
-                   VerticalAlignment="Center"/>
-      </StackPanel>
-    </Grid>
-
-    <NavigationView x:Name="MainNavigation"
-                    Grid.Row="1"
-                    IsBackButtonVisible="Collapsed"
-                    IsSettingsVisible="False"
-                    SelectionChanged="MainNavigation_SelectionChanged"
-                    Background="{StaticResource TtwenBackgroundBrush}">
-      <NavigationView.MenuItems>
-        <NavigationViewItem Content="Dashboard" Tag="Dashboard" Icon="Home"/>
-        <NavigationViewItem Content="TTWars Sunucu" Tag="Server" Icon="Globe"/>
-        <NavigationViewItem Content="Köyler" Tag="Villages" Icon="Map"/>
-        <NavigationViewItem Content="Köy Kurma" Tag="VillageSetup" Icon="Add"/>
-        <NavigationViewItem Content="Binalar" Tag="Buildings" Icon="Build"/>
-        <NavigationViewItem Content="Kaynak Yönetimi" Tag="Resources" Icon="AllApps"/>
-        <NavigationViewItem Content="Askerler" Tag="Troops" Icon="Contact"/>
-        <NavigationViewItem Content="Farm" Tag="Farm" Icon="Send"/>
-        <NavigationViewItem Content="Vaha Yağması" Tag="Oasis" Icon="Play"/>
-        <NavigationViewItem Content="Natar" Tag="Natar" Icon="Target"/>
-        <NavigationViewItem Content="Kahraman" Tag="Hero" Icon="ContactInfo"/>
-        <NavigationViewItem Content="Savaş Simülatörü" Tag="Simulator" Icon="Calculator"/>
-        <NavigationViewItem Content="Raporlar" Tag="Reports" Icon="Document"/>
-        <NavigationViewItem Content="Pazar / Transfer" Tag="Market" Icon="Shop"/>
-        <NavigationViewItem Content="İşlem Merkezi" Tag="Operations" Icon="Sync"/>
-        <NavigationViewItem Content="Loglar" Tag="Logs" Icon="View"/>
-        <NavigationViewItem Content="Ayarlar" Tag="Settings" Icon="Setting"/>
-      </NavigationView.MenuItems>
-      <Frame x:Name="ContentFrame"/>
-    </NavigationView>
-
-    <Grid Grid.Row="2" Background="#0A111C">
-      <TextBlock Text="TTwen • Sürekli çalışma modu • C# / .NET 10"
-                 Margin="14,0"
-                 VerticalAlignment="Center"
-                 Foreground="#65758E"
-                 FontSize="11"/>
-    </Grid>
+    <TextBlock Text="TTwen test"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               Foreground="{StaticResource TtwenAccentBrush}"
+               FontSize="24"/>
   </Grid>
 </Window>

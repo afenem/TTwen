@@ -1,24 +1,5 @@
 # TTwen Sürüm Notları
 
-## v0.5.2 — Gerçek Kontrol Merkezi Arayüzünün Geri Yüklenmesi
-
-Durum: Test düzeltmesi hazırlanıyor.
-
-Düzeltmeler:
-
-- Geçici "TTwen test" başlangıç penceresi kaldırıldı.
-- Gerçek TTwen Control Center ana kabuğu geri yüklendi.
-- Dashboard, TTWars Sunucu, Köyler, Binalar ve Kaynak Yönetimi navigasyonu yeniden etkinleştirildi.
-- Diğer modüller için mevcut placeholder navigasyonu korundu.
-
-Test hedefi:
-
-- EXE açıldığında gerçek TTwen kontrol merkezi penceresinin görünmesi.
-- Sol menü ve Dashboard ekranının açılması.
-- TTWars Sunucu, Köyler, Binalar ve Kaynak Yönetimi ekranlarına geçilebilmesi.
-- Önceki v0.5.1 startup smoke testinin korunması.
-
-
 ## v0.5.1 — Windows Açılış Hotfix + Test Doğrulaması
 
 Durum: Test düzeltmesi hazırlanıyor.
