@@ -53,7 +53,7 @@ jobs:
         run: dotnet restore TTwen.sln
 
       - name: Build solution
-        run: dotnet build TTwen.sln --configuration Release --platform x64 --no-restore
+        run: dotnet build TTwen.sln --configuration Release -p:Platform=x64 --no-restore
 
       - name: Run unit tests
         run: dotnet test tests/TTwen.Tests/TTwen.Tests.csproj --configuration Release --no-restore --no-build --logger "trx;LogFileName=ttwen-tests.trx"
