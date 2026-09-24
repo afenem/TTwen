@@ -13,6 +13,7 @@ namespace TTwen.Infrastructure.Browser;
 /// </remarks>
 public sealed class PlaywrightBrowserSetupService : IBrowserSetupService
 {
+    private static readonly string[] ChromiumInstallArguments = ["install", "chromium"];
     /// <inheritdoc />
     public async Task<BrowserSetupResult> InstallChromiumAsync(
         CancellationToken cancellationToken)
@@ -20,7 +21,7 @@ public sealed class PlaywrightBrowserSetupService : IBrowserSetupService
         try
         {
             var exitCode = await Task.Run(
-                () => Program.Main(new[] { "install", "chromium" }),
+                () => Program.Main(ChromiumInstallArguments),
                 cancellationToken);
 
             return exitCode == 0
