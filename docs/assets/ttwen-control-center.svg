@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#070A12"/><stop offset=".55" stop-color="#0B1020"/><stop offset="1" stop-color="#170D24"/></linearGradient>
+<linearGradient id="accent" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#20D9FF"/><stop offset="1" stop-color="#A36BFF"/></linearGradient>
+<filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="1200" height="650" rx="28" fill="url(#bg)"/>
+<rect x="18" y="18" width="1164" height="614" rx="22" fill="#070B13" stroke="#24344D"/>
+<rect x="18" y="18" width="1164" height="62" rx="22" fill="#090F19"/>
+<text x="46" y="57" font-family="Segoe UI,Arial" font-size="27" font-weight="700" fill="#20D9FF">TTWEN</text>
+<text x="158" y="55" font-family="Segoe UI,Arial" font-size="11" letter-spacing="2" fill="#6D819E">TTWARS CONTROL CENTER</text>
+<circle cx="1127" cy="48" r="6" fill="#63FFB1" filter="url(#glow)"/>
+<text x="1065" y="54" font-family="Segoe UI,Arial" font-size="11" fill="#63FFB1">SYSTEM ONLINE</text>
+<rect x="18" y="80" width="210" height="552" fill="#080D16"/>
+<line x1="228" y1="80" x2="228" y2="632" stroke="#1E2B41"/>
+<text x="42" y="116" font-family="Segoe UI,Arial" font-size="10" font-weight="700" fill="#5E7696">CONTROL</text>
+<rect x="34" y="130" width="178" height="34" rx="9" fill="#102234" stroke="#20D9FF"/>
+<g font-family="Segoe UI,Arial" font-size="12" fill="#8294AD">
+<text x="54" y="152" fill="#DFFBFF">◈ Dashboard</text><text x="54" y="190">◎ TTWars Sunucu</text><text x="54" y="224">⌂ Köyler</text><text x="54" y="258">＋ Köy Kurma</text><text x="54" y="292">▣ Binalar</text><text x="54" y="326">◌ Kaynak Yönetimi</text><text x="54" y="360">⚔ Askerler</text><text x="54" y="394">➤ Farm</text><text x="54" y="428" fill="#B68CFF">◉ Vaha Yağması</text><text x="54" y="462" fill="#B68CFF">◎ Savaş Simülatörü</text><text x="54" y="496">▤ Raporlar</text><text x="54" y="530">↔ Pazar / Transfer</text><text x="54" y="564">◫ İşlem Merkezi</text><text x="54" y="598">⚙ Ayarlar</text></g>
+<text x="258" y="116" font-family="Segoe UI,Arial" font-size="23" font-weight="700" fill="#EAF5FF">DASHBOARD</text>
+<text x="258" y="138" font-family="Segoe UI,Arial" font-size="10" fill="#71839E">Real-time village, army, oasis and operation overview</text>
+<g font-family="Segoe UI,Arial">
+<rect x="258" y="158" width="205" height="92" rx="14" fill="#101827" stroke="#20334B"/><text x="278" y="183" font-size="10" fill="#71839E">VILLAGES</text><text x="278" y="219" font-size="28" font-weight="700" fill="#20D9FF">12</text><text x="334" y="218" font-size="10" fill="#63FFB1">AUTOMATED</text>
+<rect x="477" y="158" width="205" height="92" rx="14" fill="#101827" stroke="#20334B"/><text x="497" y="183" font-size="10" fill="#71839E">TOTAL TROOPS</text><text x="497" y="219" font-size="28" font-weight="700" fill="#63FFB1">38.4K</text>
+<rect x="696" y="158" width="205" height="92" rx="14" fill="#101827" stroke="#20334B"/><text x="716" y="183" font-size="10" fill="#71839E">OASES ANALYZED</text><text x="716" y="219" font-size="28" font-weight="700" fill="#B68CFF">247</text>
+<rect x="915" y="158" width="245" height="92" rx="14" fill="#101827" stroke="#24344D"/><text x="935" y="183" font-size="10" fill="#71839E">EST. NET / HOUR</text><text x="935" y="219" font-size="28" font-weight="700" fill="#63FFB1">+184K</text>
+</g>
+<rect x="258" y="270" width="560" height="330" rx="16" fill="#101827" stroke="#20334B"/>
+<text x="280" y="300" font-family="Segoe UI,Arial" font-size="14" font-weight="700" fill="#EAF5FF">OPERATION CENTER</text>
+<text x="280" y="322" font-family="Segoe UI,Arial" font-size="10" fill="#71839E">Current activity and next actions</text>
+<g font-family="Segoe UI,Arial">
+<circle cx="286" cy="354" r="5" fill="#63FFB1" filter="url(#glow)"/><text x="302" y="358" font-size="11" fill="#DDE7F4">Village #07 — building Barracks 18</text><text x="302" y="376" font-size="9" fill="#677B96">Resource check → construction queue → verification</text>
+<circle cx="286" cy="414" r="5" fill="#20D9FF" filter="url(#glow)"/><text x="302" y="418" font-size="11" fill="#DDE7F4">Oasis (12|-47) — simulation complete</text><text x="302" y="436" font-size="9" fill="#677B96">Suggested: 120 troops · Est. net: +18.6K</text>
+<circle cx="286" cy="474" r="5" fill="#B68CFF" filter="url(#glow)"/><text x="302" y="478" font-size="11" fill="#DDE7F4">Farm queue — 14 active targets</text><text x="302" y="496" font-size="9" fill="#677B96">Reports analyzed · attack plan ready</text>
+<line x1="280" y1="520" x2="792" y2="520" stroke="#1E2B41"/><text x="280" y="548" font-size="9" fill="#667B96">SYSTEM NOTE</text><text x="280" y="568" font-size="10" fill="#9AAAC0">Every important action is logged and traceable.</text>
+</g>
+<rect x="838" y="270" width="322" height="330" rx="16" fill="#101827" stroke="#20334B"/>
+<text x="860" y="300" font-family="Segoe UI,Arial" font-size="14" font-weight="700" fill="#EAF5FF">VILLAGE HEALTH</text>
+<g font-family="Segoe UI,Arial">
+<text x="860" y="334" font-size="10" fill="#71839E">SOURCE STOCK</text><rect x="860" y="346" width="266" height="8" rx="4" fill="#18253A"/><rect x="860" y="346" width="226" height="8" rx="4" fill="#20D9FF" filter="url(#glow)"/><text x="860" y="372" font-size="9" fill="#8294AD">84% average capacity</text>
+<text x="860" y="408" font-size="10" fill="#71839E">BUILDING QUEUE</text><text x="860" y="430" font-size="11" fill="#DDE7F4">5 queued</text><text x="1036" y="430" font-size="10" fill="#FFC857">2 waiting</text>
+<text x="860" y="466" font-size="10" fill="#71839E">ARMY QUEUE</text><text x="860" y="488" font-size="11" fill="#DDE7F4">3 production plans</text><text x="1030" y="488" font-size="10" fill="#63FFB1">ACTIVE</text>
+<text x="860" y="524" font-size="10" fill="#71839E">NEXT PRIORITY</text><text x="860" y="546" font-size="11" fill="#B68CFF">Oasis analysis</text>
+<rect x="860" y="565" width="266" height="22" rx="8" fill="#0D2430" stroke="#20D9FF"/><text x="915" y="580" font-size="9" fill="#C9F8FF">CONTROL CENTER READY</text>
+</g>
+<line x1="258" y1="616" x2="1160" y2="616" stroke="url(#accent)"/>
+<text x="258" y="628" font-family="Segoe UI,Arial" font-size="8" fill="#526882">TTWEN • C# / .NET 10 • WINUI 3 • PLAYWRIGHT .NET</text>
+</svg>
