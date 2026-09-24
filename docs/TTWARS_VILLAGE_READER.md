@@ -103,3 +103,8 @@ Bu ayrım ileride kaynak yönetimi ve otomasyon kararlarının yanlış veriye d
 - otomatik işlem yapılmaz
 
 Bu alanlar ayrı modüllerde ve canlı HTML doğrulamasıyla eklenecektir.
+
+
+## UI sunum modeli
+
+`VillageRow` ayrı bir sunum modeli olarak tutulur. Domain `VillageSnapshot` doğrudan XAML içinde formatlanmaz; sayıların, koordinatların ve veri kalitesi durumunun kullanıcıya gösterilecek metne dönüştürülmesi tek sınıfta yapılır.
