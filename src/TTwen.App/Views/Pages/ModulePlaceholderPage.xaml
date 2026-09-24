@@ -1,0 +1,11 @@
+<Page x:Class="TTwen.App.Views.Pages.ModulePlaceholderPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Grid Padding="32">
+    <StackPanel>
+      <TextBlock x:Name="ModuleTitle" FontSize="30" FontWeight="Bold" Foreground="{StaticResource TtwenAccentBrush}"/>
+      <TextBlock Text="Bu modül için ayrıntılı ekran ve ViewModel sonraki geliştirme adımında eklenecektir."
+                 Margin="0,10,0,0" Foreground="#91A0B6" TextWrapping="Wrap"/>
+    </StackPanel>
+  </Grid>
+</Page>

@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.17763.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RootNamespace>TTwen.App</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Platforms>x64</Platforms>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <WindowsPackageType>None</WindowsPackageType>
+    <SelfContained>true</SelfContained>
+  </PropertyGroup>
+  <ItemGroup><PackageReference Include="Microsoft.WindowsAppSDK" /></ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TTwen.Core\TTwen.Core.csproj" />
+    <ProjectReference Include="..\TTwen.Domain\TTwen.Domain.csproj" />
+    <ProjectReference Include="..\TTwen.Application\TTwen.Application.csproj" />
+    <ProjectReference Include="..\TTwen.Infrastructure\TTwen.Infrastructure.csproj" />
+    <ProjectReference Include="..\TTwen.Simulator\TTwen.Simulator.csproj" />
+  </ItemGroup>
+</Project>

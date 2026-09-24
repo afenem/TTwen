@@ -1,0 +1,43 @@
+<Page x:Class="TTwen.App.Views.Pages.DashboardPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <ScrollViewer>
+    <StackPanel Padding="26">
+      <TextBlock Text="DASHBOARD" FontSize="30" FontWeight="Bold" Foreground="{StaticResource TtwenAccentBrush}"/>
+      <TextBlock Text="TTWars hesabının bütün otomasyon durumunun merkezi özeti."
+                 Foreground="#91A0B6" Margin="0,5,0,24"/>
+      <Grid ColumnSpacing="12">
+        <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+        <Border Grid.Column="0" Background="{StaticResource TtwenPanelBrush}" CornerRadius="12" Padding="18">
+          <StackPanel><TextBlock Text="KÖYLER" Foreground="#71839E"/><TextBlock Text="0" FontSize="30" FontWeight="Bold" Foreground="{StaticResource TtwenAccentBrush}"/><TextBlock Text="otomasyona açık" Foreground="#71839E"/></StackPanel>
+        </Border>
+        <Border Grid.Column="1" Background="{StaticResource TtwenPanelBrush}" CornerRadius="12" Padding="18">
+          <StackPanel><TextBlock Text="ASKER" Foreground="#71839E"/><TextBlock Text="0" FontSize="30" FontWeight="Bold" Foreground="{StaticResource TtwenSuccessBrush}"/><TextBlock Text="toplam" Foreground="#71839E"/></StackPanel>
+        </Border>
+        <Border Grid.Column="2" Background="{StaticResource TtwenPanelBrush}" CornerRadius="12" Padding="18">
+          <StackPanel><TextBlock Text="VAHA" Foreground="#71839E"/><TextBlock Text="0" FontSize="30" FontWeight="Bold" Foreground="#B68CFF"/><TextBlock Text="analiz bekleyen" Foreground="#71839E"/></StackPanel>
+        </Border>
+        <Border Grid.Column="3" Background="{StaticResource TtwenPanelBrush}" CornerRadius="12" Padding="18">
+          <StackPanel><TextBlock Text="NET KÂR" Foreground="#71839E"/><TextBlock Text="0" FontSize="30" FontWeight="Bold" Foreground="{StaticResource TtwenSuccessBrush}"/><TextBlock Text="son hesaplanan" Foreground="#71839E"/></StackPanel>
+        </Border>
+      </Grid>
+      <Grid Margin="0,22,0,0" ColumnSpacing="16">
+        <Grid.ColumnDefinitions><ColumnDefinition Width="2*"/><ColumnDefinition/></Grid.ColumnDefinitions>
+        <Border Background="{StaticResource TtwenPanelBrush}" CornerRadius="12" Padding="18">
+          <StackPanel><TextBlock Text="AKTİVİTE AKIŞI" FontSize="18" FontWeight="SemiBold"/>
+            <TextBlock Text="Köy, farm, vaha, asker ve bina işlemleri burada ayrıntılı olarak listelenecek."
+                       Margin="0,10,0,0" Foreground="#8C9BB0" TextWrapping="Wrap"/>
+          </StackPanel>
+        </Border>
+        <Border Grid.Column="1" Background="{StaticResource TtwenPanelBrush}" CornerRadius="12" Padding="18">
+          <StackPanel><TextBlock Text="HIZLI DURUM" FontSize="18" FontWeight="SemiBold"/>
+            <TextBlock Text="Sunucu" Margin="0,10,0,0" Foreground="#71839E"/>
+            <TextBlock Text="Bağlı değil" Foreground="{StaticResource TtwenWarningBrush}"/>
+            <TextBlock Text="Motor" Margin="0,12,0,0" Foreground="#71839E"/>
+            <TextBlock Text="Hazır" Foreground="{StaticResource TtwenSuccessBrush}"/>
+          </StackPanel>
+        </Border>
+      </Grid>
+    </StackPanel>
+  </ScrollViewer>
+</Page>

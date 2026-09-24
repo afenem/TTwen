@@ -1,0 +1,11 @@
+<Project>
+  <!-- Çözümdeki ortak C# kurallarını tek yerde tutarız; amaç projeler arasında
+       farklı nullable veya dil ayarları oluşmasını önlemektir. -->
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+  </PropertyGroup>
+</Project>

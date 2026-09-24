@@ -1,0 +1,14 @@
+<Application x:Class="TTwen.App.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Application.Resources>
+    <ResourceDictionary>
+      <SolidColorBrush x:Key="TtwenBackgroundBrush" Color="#070B12"/>
+      <SolidColorBrush x:Key="TtwenPanelBrush" Color="#0D1420"/>
+      <SolidColorBrush x:Key="TtwenAccentBrush" Color="#28D7FF"/>
+      <SolidColorBrush x:Key="TtwenSuccessBrush" Color="#63FFB1"/>
+      <SolidColorBrush x:Key="TtwenWarningBrush" Color="#FFC857"/>
+      <SolidColorBrush x:Key="TtwenDangerBrush" Color="#FF5577"/>
+    </ResourceDictionary>
+  </Application.Resources>
+</Application>
