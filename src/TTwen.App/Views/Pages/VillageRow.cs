@@ -6,12 +6,11 @@ namespace TTwen.App.Views.Pages;
 /// <summary>
 /// Domain köy snapshot'ını kontrol merkezindeki tek tablo satırına dönüştürür.
 /// </summary>
-/// <remarks>
-/// Ayrı sınıf olması WinUI x:DataType çözümlemesini güvenilir hale getirir ve
-/// tablo sunum modelini Page kodundan ayırır.
-/// </remarks>
 public sealed class VillageRow
 {
+    /// <summary>Satırın dayandığı canlı domain snapshot'ıdır.</summary>
+    public VillageSnapshot Snapshot { get; }
+
     /// <summary>Satırda gösterilen köy adıdır.</summary>
     public string Name { get; }
 
@@ -40,6 +39,7 @@ public sealed class VillageRow
     public VillageRow(VillageSnapshot snapshot)
     {
         ArgumentNullException.ThrowIfNull(snapshot);
+        Snapshot = snapshot;
 
         Name = snapshot.IsCapital == true
             ? $"{snapshot.Name} • BAŞKENT"
@@ -66,7 +66,6 @@ public sealed class VillageRow
             + $"H {Format(snapshot.Production.CropPerHour)}";
 
         var missing = new List<string>();
-
         if (!snapshot.Coordinates.HasValue) missing.Add("koordinat yok");
         if (!snapshot.HasResourceData) missing.Add("kaynak işareti yok");
         if (!snapshot.HasProductionData) missing.Add("üretim yok");

@@ -13,9 +13,7 @@ public sealed class TTWarsConnectionService : ITTWarsConnectionService
     private readonly PlaywrightBrowserSession _browserSession;
     private TTWarsClient? _client;
 
-    /// <summary>
-    /// Yeni TTWars bağlantı hizmeti oluşturur.
-    /// </summary>
+    /// <summary>Yeni TTWars bağlantı hizmeti oluşturur.</summary>
     public TTWarsConnectionService(PlaywrightBrowserSession browserSession)
     {
         _browserSession = browserSession;
@@ -43,11 +41,9 @@ public sealed class TTWarsConnectionService : ITTWarsConnectionService
             await _browserSession.StartAsync(profileDirectory);
 
             var page = _browserSession.CurrentPage
-                ?? throw new InvalidOperationException(
-                    "Playwright sayfası oluşturulamadı.");
+                ?? throw new InvalidOperationException("Playwright sayfası oluşturulamadı.");
 
             _client = new TTWarsClient(page);
-
             await _client.ConnectAsync(address.Value, cancellationToken);
 
             CurrentServerUrl = address.Value;
@@ -68,32 +64,17 @@ public sealed class TTWarsConnectionService : ITTWarsConnectionService
         catch (PlaywrightException exception)
         {
             IsConnected = false;
-            return new TTWarsConnectionResult(
-                false,
-                "Playwright bağlantısı başarısız oldu.",
-                CurrentServerUrl,
-                CurrentPageTitle,
-                exception.Message);
+            return new TTWarsConnectionResult(false, "Playwright bağlantısı başarısız oldu.", CurrentServerUrl, CurrentPageTitle, exception.Message);
         }
         catch (ArgumentException exception)
         {
             IsConnected = false;
-            return new TTWarsConnectionResult(
-                false,
-                "Sunucu adresi geçersiz.",
-                null,
-                null,
-                exception.Message);
+            return new TTWarsConnectionResult(false, "Sunucu adresi geçersiz.", null, null, exception.Message);
         }
         catch (Exception exception)
         {
             IsConnected = false;
-            return new TTWarsConnectionResult(
-                false,
-                "TTWars bağlantısı sırasında beklenmeyen bir hata oluştu.",
-                CurrentServerUrl,
-                CurrentPageTitle,
-                exception.Message);
+            return new TTWarsConnectionResult(false, "TTWars bağlantısı sırasında beklenmeyen bir hata oluştu.", CurrentServerUrl, CurrentPageTitle, exception.Message);
         }
     }
 
@@ -104,13 +85,13 @@ public sealed class TTWarsConnectionService : ITTWarsConnectionService
         if (!IsConnected || _client is null)
         {
             return new TTWarsVillageReadResult(
-                Success: false,
-                Villages: Array.Empty<TTwen.Domain.Snapshots.VillageSnapshot>(),
-                RequestedCount: 0,
-                FailedCount: 0,
-                Message: "TTWars bağlantısı açık değil.",
-                Details: "Önce TTWars Sunucu ekranından bağlantı kurun.",
-                CapturedAtUtc: DateTimeOffset.UtcNow);
+                false,
+                Array.Empty<TTwen.Domain.Snapshots.VillageSnapshot>(),
+                0,
+                0,
+                "TTWars bağlantısı açık değil.",
+                "Önce TTWars Sunucu ekranından bağlantı kurun.",
+                DateTimeOffset.UtcNow);
         }
 
         try
@@ -124,34 +105,35 @@ public sealed class TTWarsConnectionService : ITTWarsConnectionService
         catch (Exception exception)
         {
             return new TTWarsVillageReadResult(
-                Success: false,
-                Villages: Array.Empty<TTwen.Domain.Snapshots.VillageSnapshot>(),
-                RequestedCount: 0,
-                FailedCount: 0,
-                Message: "Köy bilgileri okunamadı.",
-                Details: exception.Message,
-                CapturedAtUtc: DateTimeOffset.UtcNow);
+                false,
+                Array.Empty<TTwen.Domain.Snapshots.VillageSnapshot>(),
+                0,
+                0,
+                "Köy bilgileri okunamadı.",
+                exception.Message,
+                DateTimeOffset.UtcNow);
         }
     }
 
     /// <inheritdoc />
     public async Task<TTWarsBuildingReadResult> ReadBuildingsAsync(
+        string? villageId,
         CancellationToken cancellationToken)
     {
         if (!IsConnected || _client is null)
         {
             return new TTWarsBuildingReadResult(
-                Success: false,
-                Buildings: Array.Empty<TTwen.Domain.Snapshots.BuildingSnapshot>(),
-                Message: "TTWars bağlantısı açık değil.",
-                Details: "Önce TTWars Sunucu ekranından bağlantı kurun.",
-                CapturedAtUtc: DateTimeOffset.UtcNow,
-                SourceUrl: CurrentServerUrl ?? string.Empty);
+                false,
+                Array.Empty<TTwen.Domain.Snapshots.BuildingSnapshot>(),
+                "TTWars bağlantısı açık değil.",
+                "Önce TTWars Sunucu ekranından bağlantı kurun.",
+                DateTimeOffset.UtcNow,
+                CurrentServerUrl ?? string.Empty);
         }
 
         try
         {
-            return await _client.ReadBuildingsAsync(cancellationToken);
+            return await _client.ReadBuildingsAsync(villageId, cancellationToken);
         }
         catch (OperationCanceledException)
         {
@@ -160,12 +142,12 @@ public sealed class TTWarsConnectionService : ITTWarsConnectionService
         catch (Exception exception)
         {
             return new TTWarsBuildingReadResult(
-                Success: false,
-                Buildings: Array.Empty<TTwen.Domain.Snapshots.BuildingSnapshot>(),
-                Message: "Bina bilgileri okunamadı.",
-                Details: exception.Message,
-                CapturedAtUtc: DateTimeOffset.UtcNow,
-                SourceUrl: CurrentServerUrl ?? string.Empty);
+                false,
+                Array.Empty<TTwen.Domain.Snapshots.BuildingSnapshot>(),
+                "Bina bilgileri okunamadı.",
+                exception.Message,
+                DateTimeOffset.UtcNow,
+                CurrentServerUrl ?? string.Empty);
         }
     }
 
@@ -180,31 +162,17 @@ public sealed class TTWarsConnectionService : ITTWarsConnectionService
     }
 
     /// <inheritdoc />
-    public ValueTask DisposeAsync()
-    {
-        return new ValueTask(DisconnectAsync());
-    }
+    public ValueTask DisposeAsync() => new(DisconnectAsync());
 
-    /// <summary>
-    /// TTwen için yalnızca kendi Chromium profilinin tutulacağı klasörü üretir.
-    /// </summary>
+    /// <summary>TTwen için yalnızca kendi Chromium profilinin tutulacağı klasörü üretir.</summary>
     private static string GetBrowserProfileDirectory()
     {
-        var localAppData = Environment.GetFolderPath(
-            Environment.SpecialFolder.LocalApplicationData);
+        var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
         if (string.IsNullOrWhiteSpace(localAppData))
-        {
-            throw new InvalidOperationException(
-                "Windows LocalAppData klasörü bulunamadı.");
-        }
+            throw new InvalidOperationException("Windows LocalAppData klasörü bulunamadı.");
 
-        var profileDirectory = Path.Combine(
-            localAppData,
-            "TTwen",
-            "Playwright",
-            "Profile");
-
+        var profileDirectory = Path.Combine(localAppData, "TTwen", "Playwright", "Profile");
         Directory.CreateDirectory(profileDirectory);
         return profileDirectory;
     }

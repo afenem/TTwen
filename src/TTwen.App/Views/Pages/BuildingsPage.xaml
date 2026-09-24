@@ -16,18 +16,17 @@
         <ColumnDefinition Width="*"/>
         <ColumnDefinition Width="Auto"/>
       </Grid.ColumnDefinitions>
-
       <StackPanel>
-        <TextBlock Text="BİNALAR"
-                   FontSize="28"
-                   FontWeight="Bold"
+        <TextBlock Text="BİNALAR" FontSize="28" FontWeight="Bold"
                    Foreground="{StaticResource TtwenAccentBrush}"/>
-        <TextBlock Text="Aktif TTWars köyünün dorf2 bina durumu"
-                   Margin="0,5,0,0"
-                   Foreground="#71829D"
-                   FontSize="13"/>
+        <TextBlock Text="Seçili TTWars köyünün dorf2 bina durumu"
+                   Margin="0,5,0,0" Foreground="#71829D" FontSize="13"/>
+        <TextBlock x:Name="SelectedVillageText"
+                   Text="Köy seçilmedi"
+                   Margin="0,8,0,0"
+                   Foreground="#B9C7DB"
+                   FontSize="12"/>
       </StackPanel>
-
       <Button x:Name="RefreshButton"
               Grid.Column="1"
               Content="BİNALARI OKU"
@@ -48,7 +47,6 @@
           <ColumnDefinition Width="Auto"/>
           <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-
         <StackPanel>
           <TextBlock Text="DURUM" Foreground="#6F839F" FontSize="11"/>
           <TextBlock x:Name="StatusText"
@@ -58,25 +56,16 @@
                      FontSize="15"
                      FontWeight="SemiBold"/>
         </StackPanel>
-
         <StackPanel Grid.Column="1">
           <TextBlock Text="SLOT" Foreground="#6F839F" FontSize="11"/>
-          <TextBlock x:Name="SlotCountText"
-                     Text="0"
-                     Margin="0,5,0,0"
-                     Foreground="#E9F1FF"
-                     FontSize="18"
-                     FontWeight="Bold"/>
+          <TextBlock x:Name="SlotCountText" Text="0" Margin="0,5,0,0"
+                     Foreground="#E9F1FF" FontSize="18" FontWeight="Bold"/>
         </StackPanel>
-
         <StackPanel Grid.Column="2">
           <TextBlock Text="DOLU" Foreground="#6F839F" FontSize="11"/>
-          <TextBlock x:Name="OccupiedCountText"
-                     Text="0"
-                     Margin="0,5,0,0"
+          <TextBlock x:Name="OccupiedCountText" Text="0" Margin="0,5,0,0"
                      Foreground="{StaticResource TtwenSuccessBrush}"
-                     FontSize="18"
-                     FontWeight="Bold"/>
+                     FontSize="18" FontWeight="Bold"/>
         </StackPanel>
       </Grid>
     </Border>
@@ -87,8 +76,7 @@
             BorderThickness="1"
             CornerRadius="6"
             Padding="10">
-      <ListView x:Name="BuildingList"
-                SelectionMode="None">
+      <ListView x:Name="BuildingList" SelectionMode="None">
         <ListView.Header>
           <Grid Margin="8,8,8,12">
             <Grid.ColumnDefinitions>
@@ -105,7 +93,6 @@
             <TextBlock Grid.Column="4" Text="DURUM" Foreground="#6F839F" FontSize="11"/>
           </Grid>
         </ListView.Header>
-
         <ListView.ItemTemplate>
           <DataTemplate>
             <Border Background="#0A1019"
@@ -120,27 +107,16 @@
                   <ColumnDefinition Width="100"/>
                   <ColumnDefinition Width="180"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="{Binding SlotId}"
-                           Foreground="#B6C5D9"
+                <TextBlock Text="{Binding SlotId}" Foreground="#B6C5D9" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1" Text="{Binding Name}" Foreground="#EDF5FF"
+                           FontSize="13" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="2" Text="{Binding Level}" Foreground="#B6C5D9"
                            VerticalAlignment="Center"/>
-                <TextBlock Grid.Column="1"
-                           Text="{Binding Name}"
-                           Foreground="#EDF5FF"
-                           FontSize="13"
+                <TextBlock Grid.Column="3" Text="{Binding Gid}" Foreground="#B6C5D9"
                            VerticalAlignment="Center"/>
-                <TextBlock Grid.Column="2"
-                           Text="{Binding Level}"
-                           Foreground="#B6C5D9"
-                           VerticalAlignment="Center"/>
-                <TextBlock Grid.Column="3"
-                           Text="{Binding Gid}"
-                           Foreground="#B6C5D9"
-                           VerticalAlignment="Center"/>
-                <TextBlock Grid.Column="4"
-                           Text="{Binding Status}"
+                <TextBlock Grid.Column="4" Text="{Binding Status}"
                            Foreground="{StaticResource TtwenSuccessBrush}"
-                           FontSize="11"
-                           VerticalAlignment="Center"/>
+                           FontSize="11" VerticalAlignment="Center"/>
               </Grid>
             </Border>
           </DataTemplate>

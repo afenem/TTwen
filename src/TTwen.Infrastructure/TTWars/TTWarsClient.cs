@@ -15,9 +15,7 @@ public sealed class TTWarsClient : ITTWarsClient
     private readonly TTWarsVillageReader _villageReader;
     private readonly TTWarsBuildingReader _buildingReader;
 
-    /// <summary>
-    /// Belirli bir Playwright sayfası üzerinden TTWars istemcisi oluşturur.
-    /// </summary>
+    /// <summary>Belirli bir Playwright sayfası üzerinden istemci oluşturur.</summary>
     public TTWarsClient(IPage page)
     {
         _page = page ?? throw new ArgumentNullException(nameof(page));
@@ -31,7 +29,6 @@ public sealed class TTWarsClient : ITTWarsClient
         CancellationToken cancellationToken)
     {
         var address = TTWarsServerAddress.Parse(serverUrl);
-
         cancellationToken.ThrowIfCancellationRequested();
 
         await _page.GotoAsync(
@@ -47,16 +44,13 @@ public sealed class TTWarsClient : ITTWarsClient
     /// <inheritdoc />
     public Task<TTWarsVillageReadResult> ReadVillagesAsync(
         CancellationToken cancellationToken)
-    {
-        return _villageReader.ReadAllAsync(cancellationToken);
-    }
+        => _villageReader.ReadAllAsync(cancellationToken);
 
     /// <inheritdoc />
     public Task<TTWarsBuildingReadResult> ReadBuildingsAsync(
+        string? villageId,
         CancellationToken cancellationToken)
-    {
-        return _buildingReader.ReadAsync(cancellationToken);
-    }
+        => _buildingReader.ReadAsync(villageId, cancellationToken);
 
     /// <inheritdoc />
     public Task<IReadOnlyList<Oasis>> ScanOasesAsync(
