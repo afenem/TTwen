@@ -8,17 +8,11 @@ namespace TTwen.App;
 /// <summary>
 /// Ana pencerenin uygulama kabuğudur.
 /// </summary>
-/// <remarks>
-/// Navigation ve ortak görünüm burada tutulur. Modüllerin iş mantığı bu sınıfa
-/// konmaz; her modül kendi Page/ViewModel katmanında geliştirilir.
-/// </remarks>
 public sealed partial class MainWindow : Window
 {
     private readonly AppServiceProvider _services;
 
-    /// <summary>
-    /// Uygulama shell'ini oluşturur.
-    /// </summary>
+    /// <summary>Uygulama shell'ini oluşturur.</summary>
     public MainWindow()
     {
         _services = App.Services;
@@ -29,9 +23,7 @@ public sealed partial class MainWindow : Window
         ContentFrame.Navigate(typeof(DashboardPage));
     }
 
-    /// <summary>
-    /// Sol navigasyon seçimlerini ilgili modül sayfasına yönlendirir.
-    /// </summary>
+    /// <summary>Sol navigasyon seçimlerini ilgili modül sayfasına yönlendirir.</summary>
     private void MainNavigation_SelectionChanged(
         NavigationView sender,
         NavigationViewSelectionChangedEventArgs args)
@@ -54,6 +46,12 @@ public sealed partial class MainWindow : Window
             case "Villages":
                 ContentFrame.Navigate(
                     typeof(VillagesPage),
+                    _services);
+                break;
+
+            case "Buildings":
+                ContentFrame.Navigate(
+                    typeof(BuildingsPage),
                     _services);
                 break;
 
