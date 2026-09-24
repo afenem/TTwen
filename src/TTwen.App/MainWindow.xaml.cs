@@ -16,6 +16,9 @@ public sealed partial class MainWindow : Window
 {
     private readonly AppServiceProvider _services;
 
+    /// <summary>
+    /// Uygulama shell'ini oluşturur.
+    /// </summary>
     public MainWindow()
     {
         _services = App.Services;
@@ -26,6 +29,9 @@ public sealed partial class MainWindow : Window
         ContentFrame.Navigate(typeof(DashboardPage));
     }
 
+    /// <summary>
+    /// Sol navigasyon seçimlerini ilgili modül sayfasına yönlendirir.
+    /// </summary>
     private void MainNavigation_SelectionChanged(
         NavigationView sender,
         NavigationViewSelectionChangedEventArgs args)
@@ -42,6 +48,12 @@ public sealed partial class MainWindow : Window
             case "Server":
                 ContentFrame.Navigate(
                     typeof(TTWarsServerPage),
+                    _services);
+                break;
+
+            case "Villages":
+                ContentFrame.Navigate(
+                    typeof(VillagesPage),
                     _services);
                 break;
 
