@@ -1,3 +1,4 @@
+using System.Globalization;
 using TTwen.Application.Models;
 using TTwen.Application.Services;
 using Xunit;
@@ -15,7 +16,7 @@ public sealed class TTWarsVillageSnapshotMapperTests
     [Fact]
     public void MapsPageDataToVillageSnapshot()
     {
-        var capturedAt = DateTimeOffset.Parse("2026-09-24T09:00:00Z");
+        var capturedAt = DateTimeOffset.Parse("2026-09-24T09:00:00Z", CultureInfo.InvariantCulture);
 
         var data = new TTWarsVillagePageData
         {

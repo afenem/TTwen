@@ -124,7 +124,7 @@
         </ListView.Header>
 
         <ListView.ItemTemplate>
-          <DataTemplate x:DataType="local:VillagesPage.VillageRow">
+          <DataTemplate x:DataType="local:VillageRow">
             <Border Background="#0A1019"
                     BorderBrush="#18283B"
                     BorderThickness="0,1,0,0"
