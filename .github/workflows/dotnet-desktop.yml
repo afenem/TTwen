@@ -63,7 +63,7 @@ jobs:
 
       - name: Publish Windows x64 test build
         shell: pwsh
-        run: dotnet publish src/TTwen.App/TTwen.App.csproj --configuration Release --runtime win-x64 --self-contained true -p:Platform=x64 -p:Version=$env:TTWEN_TEST_VERSION --no-restore --output "artifacts/TTwen-v$env:TTWEN_TEST_VERSION-test"
+        run: dotnet publish src/TTwen.App/TTwen.App.csproj --configuration Release --runtime win-x64 --self-contained true -p:Platform=x64 -p:Version=$env:TTWEN_TEST_VERSION -p:PublishTrimmed=false -p:PublishSingleFile=false -p:PublishReadyToRun=false --no-restore --output "artifacts/TTwen-v$env:TTWEN_TEST_VERSION-test"
 
       - name: Smoke-test published executable
         shell: pwsh
@@ -77,6 +77,11 @@ jobs:
           Start-Sleep -Seconds 8
 
           if ($process.HasExited) {
+            Write-Host "TTwen.App.exe erken kapandı. Son Windows Application olayları:"
+            Get-WinEvent -FilterHashtable @{ LogName = 'Application'; StartTime = (Get-Date).AddSeconds(-30) } -ErrorAction SilentlyContinue |
+              Where-Object { $_.ProviderName -in @('Application Error', 'Windows Error Reporting', '.NET Runtime') } |
+              Select-Object -First 10 TimeCreated, ProviderName, Id, LevelDisplayName, Message |
+              Format-List
             throw "TTwen.App.exe başlangıç smoke testinde $($process.ExitCode) koduyla kapandı."
           }
 
