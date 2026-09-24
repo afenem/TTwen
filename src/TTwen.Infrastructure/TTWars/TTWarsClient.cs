@@ -1,6 +1,7 @@
 using Microsoft.Playwright;
 using TTwen.Application.Interfaces;
 using TTwen.Domain.Entities;
+using TTwen.Domain.ValueObjects;
 
 namespace TTwen.Infrastructure.TTWars;
 
@@ -15,25 +16,34 @@ public sealed class TTWarsClient : ITTWarsClient
 {
     private readonly IPage _page;
 
+    /// <summary>
+    /// Belirli bir Playwright sayfası üzerinden TTWars istemcisi oluşturur.
+    /// </summary>
     public TTWarsClient(IPage page)
     {
-        _page = page;
+        _page = page ?? throw new ArgumentNullException(nameof(page));
     }
 
+    /// <inheritdoc />
     public async Task ConnectAsync(
         string serverUrl,
         CancellationToken cancellationToken)
     {
-        var url = NormalizeServerUrl(serverUrl);
+        var address = TTWarsServerAddress.Parse(serverUrl);
+
+        cancellationToken.ThrowIfCancellationRequested();
 
         await _page.GotoAsync(
-            url,
+            address.Value,
             new PageGotoOptions
             {
                 WaitUntil = WaitUntilState.DOMContentLoaded
             });
+
+        cancellationToken.ThrowIfCancellationRequested();
     }
 
+    /// <inheritdoc />
     public Task<IReadOnlyList<Village>> ReadVillagesAsync(
         CancellationToken cancellationToken)
     {
@@ -42,29 +52,12 @@ public sealed class TTWarsClient : ITTWarsClient
         return Task.FromResult(result);
     }
 
+    /// <inheritdoc />
     public Task<IReadOnlyList<Oasis>> ScanOasesAsync(
         CancellationToken cancellationToken)
     {
         // Gerçek harita yapısı doğrulandıktan sonra OasisReader burada çağrılacaktır.
         IReadOnlyList<Oasis> result = Array.Empty<Oasis>();
         return Task.FromResult(result);
-    }
-
-    private static string NormalizeServerUrl(string input)
-    {
-        if (string.IsNullOrWhiteSpace(input))
-            throw new ArgumentException(
-                "TTWars sunucu adresi boş olamaz.",
-                nameof(input));
-
-        var value = input.Trim();
-
-        if (!value.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
-            && !value.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
-        {
-            value = "https://" + value;
-        }
-
-        return value.TrimEnd('/');
     }
 }

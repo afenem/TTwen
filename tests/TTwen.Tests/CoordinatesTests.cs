@@ -9,7 +9,7 @@ namespace TTwen.Tests;
 public sealed class CoordinatesTests
 {
     [Fact]
-    public void DistanceTo_ReturnsExpectedEuclideanDistance()
+    public void DistanceToReturnsExpectedEuclideanDistance()
     {
         var first = new Coordinates(0, 0);
         var second = new Coordinates(3, 4);

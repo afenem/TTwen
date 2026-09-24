@@ -1,4 +1,5 @@
 using Microsoft.UI.Xaml;
+using TTwen.App.Services;
 
 namespace TTwen.App;
 
@@ -12,6 +13,11 @@ namespace TTwen.App;
 public partial class App : Microsoft.UI.Xaml.Application
 {
     private MainWindow? _window;
+
+    /// <summary>
+    /// Uygulama genelindeki servislerin composition root'u.
+    /// </summary>
+    public static AppServiceProvider Services { get; } = new();
 
     public App()
     {

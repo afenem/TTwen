@@ -1,5 +1,6 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using TTwen.App.Services;
 using TTwen.App.Views.Pages;
 
 namespace TTwen.App;
@@ -13,9 +14,15 @@ namespace TTwen.App;
 /// </remarks>
 public sealed partial class MainWindow : Window
 {
+    private readonly AppServiceProvider _services;
+
     public MainWindow()
     {
+        _services = App.Services;
+
         InitializeComponent();
+        Closed += (_, _) => _ = _services.DisposeAsync().AsTask();
+
         ContentFrame.Navigate(typeof(DashboardPage));
     }
 
@@ -26,14 +33,23 @@ public sealed partial class MainWindow : Window
         if (args.SelectedItem is not NavigationViewItem item)
             return;
 
-        if (item.Tag?.ToString() == "Dashboard")
+        switch (item.Tag?.ToString())
         {
-            ContentFrame.Navigate(typeof(DashboardPage));
-            return;
-        }
+            case "Dashboard":
+                ContentFrame.Navigate(typeof(DashboardPage));
+                break;
 
-        ContentFrame.Navigate(
-            typeof(ModulePlaceholderPage),
-            item.Content?.ToString());
+            case "Server":
+                ContentFrame.Navigate(
+                    typeof(TTWarsServerPage),
+                    _services);
+                break;
+
+            default:
+                ContentFrame.Navigate(
+                    typeof(ModulePlaceholderPage),
+                    item.Content?.ToString());
+                break;
+        }
     }
 }

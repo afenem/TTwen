@@ -20,6 +20,27 @@ Pazar / Transfer
 Loglar
 Ayarlar
 
+## TTWars Sunucu
+
+Ana amaç: TTWars web oturumunun bağlantı sınırını kullanıcıya açık ve yönetilebilir biçimde sunmak.
+
+Ekran bölümleri:
+- Sunucu adresi ve bağlantı düğmeleri.
+- Bağlantı durumu.
+- Aktif sunucu adresi.
+- Son açılan sayfanın başlığı.
+- Playwright Chromium hazırlama düğmesi ve sonucu.
+- Bağlantı hatası için teknik ayrıntı alanı.
+
+Durum renkleri:
+- Cyan = aktif sistem/bağlantı operasyonu.
+- Yeşil = başarılı bağlantı.
+- Amber = bekleyen hazırlık veya uyarı.
+- Kırmızı = bağlantı/çalışma hatası.
+- Mor = analiz ve simulator.
+
+Bu ekran yalnızca bağlantı sınırını doğrular. Köy, kaynak, asker veya harita verileri daha sonraki okuyucu/adaptör adımlarında eklenir.
+
 ## Dashboard
 
 Kartlar:
