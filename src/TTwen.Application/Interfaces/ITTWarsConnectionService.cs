@@ -3,37 +3,28 @@ using TTwen.Application.Models;
 namespace TTwen.Application.Interfaces;
 
 /// <summary>
-/// TTWars tarayıcı bağlantısının application katmanına sunduğu sözleşmedir.
+/// Uygulama arayüzüne sunulan TTWars bağlantı ve canlı veri servisidir.
 /// </summary>
-/// <remarks>
-/// UI bu sözleşmeyi kullanır; Playwright veya TTWars HTML ayrıntılarını bilmez.
-/// </remarks>
 public interface ITTWarsConnectionService : IAsyncDisposable
 {
-    /// <summary>
-    /// Geçerli bir tarayıcı bağlantısı olup olmadığını bildirir.
-    /// </summary>
+    /// <summary>Geçerli TTWars bağlantısının açık olup olmadığını gösterir.</summary>
     bool IsConnected { get; }
 
-    /// <summary>
-    /// Bağlı olunan TTWars adresini döndürür.
-    /// </summary>
+    /// <summary>Aktif sunucunun normalize edilmiş URL'sidir.</summary>
     string? CurrentServerUrl { get; }
 
-    /// <summary>
-    /// Son açılan sayfanın başlığını döndürür.
-    /// </summary>
+    /// <summary>Aktif web sayfasının başlığıdır.</summary>
     string? CurrentPageTitle { get; }
 
-    /// <summary>
-    /// Verilen TTWars adresine kalıcı tarayıcı oturumu ile bağlanır.
-    /// </summary>
+    /// <summary>TTWars sunucusuna bağlanır.</summary>
     Task<TTWarsConnectionResult> ConnectAsync(
         string serverUrl,
         CancellationToken cancellationToken);
 
-    /// <summary>
-    /// Tarayıcı oturumunu kapatır ve bağlantı durumunu sıfırlar.
-    /// </summary>
+    /// <summary>Canlı köy snapshot'larını okur.</summary>
+    Task<TTWarsVillageReadResult> ReadVillagesAsync(
+        CancellationToken cancellationToken);
+
+    /// <summary>Açık TTWars tarayıcı oturumunu kapatır.</summary>
     Task DisconnectAsync();
 }

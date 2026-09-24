@@ -8,10 +8,6 @@ namespace TTwen.Infrastructure.TTWars;
 /// <summary>
 /// TTWars bağlantısının gerçek Playwright uygulamasıdır.
 /// </summary>
-/// <remarks>
-/// Tarayıcı oturumunu kalıcı tutar ve TTWarsClient ile web katmanına bağlanır.
-/// UI ve Domain bu sınıfın Playwright ayrıntılarını doğrudan bilmez.
-/// </remarks>
 public sealed class TTWarsConnectionService : ITTWarsConnectionService
 {
     private readonly PlaywrightBrowserSession _browserSession;
@@ -102,6 +98,56 @@ public sealed class TTWarsConnectionService : ITTWarsConnectionService
                 CurrentServerUrl,
                 CurrentPageTitle,
                 exception.Message);
+        }
+    }
+
+    /// <inheritdoc />
+    public async Task<TTWarsVillageReadResult> ReadVillagesAsync(
+        CancellationToken cancellationToken)
+    {
+        var capturedAtUtc = DateTimeOffset.UtcNow;
+
+        if (!IsConnected || _client is null)
+        {
+            return new TTWarsVillageReadResult(
+                Success: false,
+                Villages: Array.Empty<TTwen.Domain.Snapshots.VillageSnapshot>(),
+                RequestedCount: 0,
+                FailedCount: 0,
+                Message: "TTWars bağlantısı açık değil.",
+                Details: "Önce TTWars Sunucu ekranından bağlantı kurun.",
+                CapturedAtUtc: capturedAtUtc);
+        }
+
+        try
+        {
+            return await _client.ReadVillagesAsync(cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (PlaywrightException exception)
+        {
+            return new TTWarsVillageReadResult(
+                Success: false,
+                Villages: Array.Empty<TTwen.Domain.Snapshots.VillageSnapshot>(),
+                RequestedCount: 0,
+                FailedCount: 0,
+                Message: "Köy bilgileri Playwright üzerinden okunamadı.",
+                Details: exception.Message,
+                CapturedAtUtc: capturedAtUtc);
+        }
+        catch (Exception exception)
+        {
+            return new TTWarsVillageReadResult(
+                Success: false,
+                Villages: Array.Empty<TTwen.Domain.Snapshots.VillageSnapshot>(),
+                RequestedCount: 0,
+                FailedCount: 0,
+                Message: "Köy bilgileri okunurken beklenmeyen bir hata oluştu.",
+                Details: exception.Message,
+                CapturedAtUtc: capturedAtUtc);
         }
     }
 
