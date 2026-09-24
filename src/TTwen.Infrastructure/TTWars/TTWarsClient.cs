@@ -1,5 +1,6 @@
 using Microsoft.Playwright;
 using TTwen.Application.Interfaces;
+using TTwen.Application.Models;
 using TTwen.Domain.Entities;
 using TTwen.Domain.ValueObjects;
 
@@ -8,13 +9,10 @@ namespace TTwen.Infrastructure.TTWars;
 /// <summary>
 /// TTWars web arayüzüne bağlanan Infrastructure adapter'ıdır.
 /// </summary>
-/// <remarks>
-/// TTWars'a özel URL, HTML, selector ve reader kodu yalnızca bu katmanda bulunur.
-/// Bu izolasyon, sunucu HTML'i değiştiğinde diğer katmanları korumak içindir.
-/// </remarks>
 public sealed class TTWarsClient : ITTWarsClient
 {
     private readonly IPage _page;
+    private readonly TTWarsVillageReader _villageReader;
 
     /// <summary>
     /// Belirli bir Playwright sayfası üzerinden TTWars istemcisi oluşturur.
@@ -22,6 +20,7 @@ public sealed class TTWarsClient : ITTWarsClient
     public TTWarsClient(IPage page)
     {
         _page = page ?? throw new ArgumentNullException(nameof(page));
+        _villageReader = new TTWarsVillageReader(_page);
     }
 
     /// <inheritdoc />
@@ -44,12 +43,10 @@ public sealed class TTWarsClient : ITTWarsClient
     }
 
     /// <inheritdoc />
-    public Task<IReadOnlyList<Village>> ReadVillagesAsync(
+    public Task<TTWarsVillageReadResult> ReadVillagesAsync(
         CancellationToken cancellationToken)
     {
-        // Gerçek HTML doğrulandıktan sonra VillageReader burada çağrılacaktır.
-        IReadOnlyList<Village> result = Array.Empty<Village>();
-        return Task.FromResult(result);
+        return _villageReader.ReadAllAsync(cancellationToken);
     }
 
     /// <inheritdoc />

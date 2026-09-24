@@ -1,21 +1,24 @@
-using TTwen.Domain.Entities;
+using TTwen.Application.Models;
 
 namespace TTwen.Application.Interfaces;
 
 /// <summary>
-/// TTWars işlemlerinin uygulama katmanına sunduğu soyut sözleşmedir.
+/// TTWars işlemlerinin uygulama katmanına sunduğu web adapter sözleşmesidir.
 /// </summary>
 /// <remarks>
-/// UI, Playwright selector'ı veya HTML ayrıntısı bilmez. Örneğin UI "vahaları
-/// tara" der; bunun nasıl gerçekleştirileceğini Infrastructure belirler.
+/// UI, Playwright selector'ı veya HTML ayrıntısı bilmez. Web'e özgü okuma ve
+/// navigasyon işlemleri Infrastructure katmanında kalır.
 /// </remarks>
 public interface ITTWarsClient
 {
+    /// <summary>Verilen TTWars adresine gider.</summary>
     Task ConnectAsync(string serverUrl, CancellationToken cancellationToken);
 
-    Task<IReadOnlyList<Village>> ReadVillagesAsync(
+    /// <summary>Hesabın erişebildiği köyleri canlı web sayfalarından okur.</summary>
+    Task<TTWarsVillageReadResult> ReadVillagesAsync(
         CancellationToken cancellationToken);
 
-    Task<IReadOnlyList<Oasis>> ScanOasesAsync(
+    /// <summary>Haritadaki vahaları tarar.</summary>
+    Task<IReadOnlyList<TTwen.Domain.Entities.Oasis>> ScanOasesAsync(
         CancellationToken cancellationToken);
 }
