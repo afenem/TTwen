@@ -65,6 +65,21 @@ jobs:
         shell: pwsh
         run: dotnet publish src/TTwen.App/TTwen.App.csproj --configuration Release --runtime win-x64 --self-contained true -p:Platform=x64 -p:Version=$env:TTWEN_TEST_VERSION -p:PublishTrimmed=false -p:PublishSingleFile=false -p:PublishReadyToRun=false --no-restore --output "artifacts/TTwen-v$env:TTWEN_TEST_VERSION-test"
 
+      - name: Verify published WinUI resource index
+        shell: pwsh
+        run: |
+          $publishDir = Resolve-Path "artifacts/TTwen-v$env:TTWEN_TEST_VERSION-test"
+          $pri = Get-ChildItem -Path $publishDir -Filter "*.pri" -File -ErrorAction SilentlyContinue
+          if ($pri.Count -eq 0) {
+            throw "Publish çıktısında hiçbir PRI dosyası bulunamadı. WinUI XAML kaynakları çalışamaz."
+          }
+          $projectPriName = "TTwen.App.pri"
+          if (-not (Test-Path (Join-Path $publishDir $projectPriName))) {
+            throw "$projectPriName publish çıktısında bulunamadı."
+          }
+          Write-Host "Bulunan PRI dosyaları:"
+          $pri | Select-Object Name, Length | Format-Table
+
       - name: Smoke-test published executable
         shell: pwsh
         run: |
