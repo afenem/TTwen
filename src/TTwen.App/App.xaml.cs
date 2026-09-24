@@ -9,7 +9,7 @@ namespace TTwen.App;
 /// İş mantığı burada bulunmaz. Sadece ana pencereyi oluşturur; böylece
 /// UI yaşam döngüsü business logic'ten ayrılır.
 /// </remarks>
-public partial class App : Application
+public partial class App : Microsoft.UI.Xaml.Application
 {
     private MainWindow? _window;
 
