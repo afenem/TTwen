@@ -52,7 +52,8 @@ public readonly record struct TTWarsServerAddress
                 nameof(input));
         }
 
-        if (uri.Scheme is not Uri.UriSchemeHttp and not Uri.UriSchemeHttps)
+        if (!string.Equals(uri.Scheme, Uri.UriSchemeHttp, StringComparison.OrdinalIgnoreCase)
+            && !string.Equals(uri.Scheme, Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase))
         {
             throw new ArgumentException(
                 "TTWars sunucu adresi yalnızca HTTP veya HTTPS kullanabilir.",
