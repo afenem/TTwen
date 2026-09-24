@@ -1,56 +1,22 @@
 # TTwen Sürüm Notları
 
-## v0.2.0 — TTWars Köy Okuyucu
+## v0.3.0 — TTWars Bina Okuyucu
 
-**Durum:** Feature branch / canlı TTWars HTML doğrulaması bekleniyor
+Durum: Feature branch / canlı TTWars HTML doğrulaması bekleniyor.
 
-### Eklenenler
+Eklenenler:
 
-- TTWars hesabındaki köylerin canlı okunması için Playwright reader katmanı.
-- Köy kimliği, ad, başkent durumu, koordinat ve nüfus modeli.
-- Odun, tuğla, demir ve tahıl stokları.
-- Depo ve ambar kapasitesi.
-- Saatlik kaynak üretimleri.
-- Ham web verisi ile domain snapshot arasında mapper katmanı.
-- Kısmi okuma ve hata ayrıntılarını taşıyan sonuç modeli.
-- Köyler kontrol merkezi ekranı.
-- Okuma durumu, köy sayısı ve son okuma zamanı göstergeleri.
-- Eksik veya okunamayan alanların `null` olarak korunması.
-- Selector sorunları için tanılama bilgileri.
-- Mapper için birim testleri.
+- Aktif köyün dorf2.php bina slotlarını okuyan Playwright reader.
+- Modern buildingSlot ve klasik Travian/T3.6 DOM uyumluluğu.
+- Slot, bina adı, seviye ve GID modeli.
+- Dolu, boş ve inşa/yükseltme durumlarının ayrıştırılması.
+- Tek DOM taramasında bina okuma.
+- Bina selector tanılamaları.
+- Binalar kontrol merkezi ekranı.
+- Bina snapshot model testleri.
 
-### Mimari değişiklik
+Kapsam dışı:
 
-Yeni katman:
-
-```text
-TTWars HTML
-    ↓
-TTWarsVillageReader
-    ↓
-TTWarsVillagePageData
-    ↓
-TTWarsVillageSnapshotMapper
-    ↓
-VillageSnapshot
-    ↓
-VillagesPage
-```
-
-### Kapsam dışı
-
-Bu sürüm henüz:
-
-- bina seviyelerini,
-- asker sayılarını,
-- kahraman durumunu,
-- inşa/eğitim kuyruklarını,
-- otomatik oyun işlemlerini
-
-gerçekleştirmez.
-
-### Doğrulama
-
-- GitHub Actions Build: başarılı
-- GitHub Actions Unit Tests: başarılı
-- Canlı TTWars HTML doğrulaması: sonraki test aşaması
+- Bina yükseltme.
+- Otomatik inşa.
+- Kaynak harcama.

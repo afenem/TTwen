@@ -5,10 +5,6 @@ namespace TTwen.Application.Interfaces;
 /// <summary>
 /// TTWars işlemlerinin uygulama katmanına sunduğu web adapter sözleşmesidir.
 /// </summary>
-/// <remarks>
-/// UI, Playwright selector'ı veya HTML ayrıntısı bilmez. Web'e özgü okuma ve
-/// navigasyon işlemleri Infrastructure katmanında kalır.
-/// </remarks>
 public interface ITTWarsClient
 {
     /// <summary>Verilen TTWars adresine gider.</summary>
@@ -16,6 +12,10 @@ public interface ITTWarsClient
 
     /// <summary>Hesabın erişebildiği köyleri canlı web sayfalarından okur.</summary>
     Task<TTWarsVillageReadResult> ReadVillagesAsync(
+        CancellationToken cancellationToken);
+
+    /// <summary>Aktif köyün bina slotlarını canlı dorf2.php sayfasından okur.</summary>
+    Task<TTWarsBuildingReadResult> ReadBuildingsAsync(
         CancellationToken cancellationToken);
 
     /// <summary>Haritadaki vahaları tarar.</summary>

@@ -13,6 +13,7 @@ public sealed class TTWarsClient : ITTWarsClient
 {
     private readonly IPage _page;
     private readonly TTWarsVillageReader _villageReader;
+    private readonly TTWarsBuildingReader _buildingReader;
 
     /// <summary>
     /// Belirli bir Playwright sayfası üzerinden TTWars istemcisi oluşturur.
@@ -21,6 +22,7 @@ public sealed class TTWarsClient : ITTWarsClient
     {
         _page = page ?? throw new ArgumentNullException(nameof(page));
         _villageReader = new TTWarsVillageReader(_page);
+        _buildingReader = new TTWarsBuildingReader(_page);
     }
 
     /// <inheritdoc />
@@ -50,10 +52,16 @@ public sealed class TTWarsClient : ITTWarsClient
     }
 
     /// <inheritdoc />
+    public Task<TTWarsBuildingReadResult> ReadBuildingsAsync(
+        CancellationToken cancellationToken)
+    {
+        return _buildingReader.ReadAsync(cancellationToken);
+    }
+
+    /// <inheritdoc />
     public Task<IReadOnlyList<Oasis>> ScanOasesAsync(
         CancellationToken cancellationToken)
     {
-        // Gerçek harita yapısı doğrulandıktan sonra OasisReader burada çağrılacaktır.
         IReadOnlyList<Oasis> result = Array.Empty<Oasis>();
         return Task.FromResult(result);
     }
