@@ -1,22 +1,22 @@
 # TTwen Sürüm Notları
 
-## v0.3.0 — TTWars Bina Okuyucu
+## v0.4.0 — Aktif Köy Bağlamı
 
-Durum: Feature branch / canlı TTWars HTML doğrulaması bekleniyor.
+Durum: Feature branch / CI doğrulaması bekleniyor.
 
 Eklenenler:
 
-- Aktif köyün dorf2.php bina slotlarını okuyan Playwright reader.
-- Modern buildingSlot ve klasik Travian/T3.6 DOM uyumluluğu.
-- Slot, bina adı, seviye ve GID modeli.
-- Dolu, boş ve inşa/yükseltme durumlarının ayrıştırılması.
-- Tek DOM taramasında bina okuma.
-- Bina selector tanılamaları.
-- Binalar kontrol merkezi ekranı.
-- Bina snapshot model testleri.
+- Uygulama genelinde seçili köy context'i.
+- Köyler ekranında tekil köy seçimi.
+- Seçili köyün kimliğinin ortak application state içinde tutulması.
+- Binalar ekranının seçili köye göre bina okuması.
+- Seçim durumunu doğrulayan unit testleri.
+
+Mimari hedef:
+
+Binalar, Kaynaklar, Askerler, Kahraman, Farm ve diğer modüller aynı aktif köy context'ini kullanabilecek.
 
 Kapsam dışı:
 
-- Bina yükseltme.
-- Otomatik inşa.
-- Kaynak harcama.
+- Köy seçiminin disk üzerinde kalıcı saklanması.
+- Otomatik köy değiştirme politikaları.

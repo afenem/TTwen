@@ -10,7 +10,7 @@ using TTwen.Domain.Snapshots;
 namespace TTwen.App.Views.Pages;
 
 /// <summary>
-/// Aktif TTWars köyünün bina durumunu gösteren kontrol merkezi sayfasıdır.
+/// Seçili TTWars köyünün bina durumunu gösteren kontrol merkezi sayfasıdır.
 /// </summary>
 public sealed partial class BuildingsPage : Page
 {
@@ -30,24 +30,45 @@ public sealed partial class BuildingsPage : Page
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
         base.OnNavigatedTo(e);
-
         _services = e.Parameter as AppServiceProvider;
 
-        if (_services is not null && _services.TTWarsConnection.IsConnected)
+        if (_services is null)
+        {
+            SetStatus("Uygulama servisleri bulunamadı.", false);
+            return;
+        }
+
+        UpdateSelectedVillageText();
+
+        if (_services.TTWarsConnection.IsConnected
+            && _services.ActiveVillage.CurrentVillage is not null)
+        {
             _ = RefreshBuildingsAsync();
+        }
         else
-            SetStatus("TTWars bağlantısı açık değil.", success: false);
+        {
+            SetStatus(
+                _services.TTWarsConnection.IsConnected
+                    ? "Önce Köyler ekranından bir köy seçin."
+                    : "TTWars bağlantısı açık değil.",
+                false);
+        }
+    }
+
+    /// <inheritdoc />
+    protected override void OnNavigatedFrom(NavigationEventArgs e)
+    {
+        base.OnNavigatedFrom(e);
+        _services = null;
     }
 
     /// <summary>Kullanıcının manuel bina okuma komutunu işler.</summary>
-    private async void RefreshButton_Click(
-        object sender,
-        RoutedEventArgs e)
+    private async void RefreshButton_Click(object sender, RoutedEventArgs e)
     {
         await RefreshBuildingsAsync();
     }
 
-    /// <summary>Aktif köyün canlı bina snapshot'larını alır ve tabloyu yeniler.</summary>
+    /// <summary>Seçili köyün canlı bina snapshot'larını alır ve tabloyu yeniler.</summary>
     private async Task RefreshBuildingsAsync()
     {
         if (_services is null)
@@ -55,16 +76,26 @@ public sealed partial class BuildingsPage : Page
 
         if (!_services.TTWarsConnection.IsConnected)
         {
-            SetStatus("TTWars bağlantısı açık değil.", success: false);
+            SetStatus("TTWars bağlantısı açık değil.", false);
             return;
         }
 
+        var selectedVillage = _services.ActiveVillage.CurrentVillage;
+
+        if (selectedVillage is null)
+        {
+            SetStatus("Önce Köyler ekranından bir köy seçin.", false);
+            return;
+        }
+
+        UpdateSelectedVillageText();
         RefreshButton.IsEnabled = false;
-        SetStatus("Binalar okunuyor...", success: true);
+        SetStatus("Binalar okunuyor...", true);
 
         try
         {
             var result = await _services.TTWarsConnection.ReadBuildingsAsync(
+                selectedVillage.Id,
                 CancellationToken.None);
 
             Buildings.Clear();
@@ -80,13 +111,14 @@ public sealed partial class BuildingsPage : Page
                     CultureInfo.InvariantCulture);
 
             var success = result.Success || result.Buildings.Count > 0;
-
             SetStatus(result.Message, success);
 
             if (!string.IsNullOrWhiteSpace(result.Details))
+            {
                 SetStatus(
                     result.Message + " • " + result.Details,
-                    success: false);
+                    false);
+            }
         }
         catch (OperationCanceledException)
         {
@@ -102,6 +134,18 @@ public sealed partial class BuildingsPage : Page
         {
             RefreshButton.IsEnabled = true;
         }
+    }
+
+    /// <summary>Seçili köy bilgisini başlık alanında gösterir.</summary>
+    private void UpdateSelectedVillageText()
+    {
+        var village = _services?.ActiveVillage.CurrentVillage;
+
+        SelectedVillageText.Text = village is null
+            ? "Köy seçilmedi"
+            : village.Coordinates is { } coordinates
+                ? $"Seçili köy: {village.Name}  {coordinates}"
+                : $"Seçili köy: {village.Name}";
     }
 
     /// <summary>UI durum metnini günceller.</summary>

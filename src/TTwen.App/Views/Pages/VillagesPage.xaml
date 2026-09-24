@@ -47,16 +47,18 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel>
-          <TextBlock Text="OKUMA DURUMU"
-                     Foreground="#6F839F"
-                     FontSize="11"
+          <TextBlock Text="SEÇİLİ KÖY" Foreground="#6F839F" FontSize="11"/>
+          <TextBlock x:Name="SelectedVillageText"
+                     Text="—"
+                     Margin="0,5,0,0"
+                     Foreground="{StaticResource TtwenAccentBrush}"
+                     FontSize="15"
                      FontWeight="SemiBold"/>
           <TextBlock x:Name="StatusText"
                      Text="Hazır"
-                     Margin="0,5,0,0"
+                     Margin="0,4,0,0"
                      Foreground="{StaticResource TtwenSuccessBrush}"
-                     FontSize="15"
-                     FontWeight="SemiBold"/>
+                     FontSize="11"/>
         </StackPanel>
 
         <StackPanel Grid.Column="1">
@@ -102,7 +104,8 @@
             Padding="10">
       <ListView x:Name="VillageList"
                 ItemsSource="{x:Bind Villages}"
-                SelectionMode="None">
+                SelectionMode="Single"
+                SelectionChanged="VillageList_SelectionChanged">
         <ListView.Header>
           <Grid Margin="8,8,8,12">
             <Grid.ColumnDefinitions>
@@ -137,50 +140,27 @@
                   <ColumnDefinition Width="2*"/>
                   <ColumnDefinition Width="150"/>
                 </Grid.ColumnDefinitions>
-
                 <StackPanel>
-                  <TextBlock Text="{Binding Name}"
-                             Foreground="#EDF5FF"
-                             FontSize="14"
-                             FontWeight="SemiBold"/>
-                  <TextBlock Text="{Binding Id}"
-                             Margin="0,3,0,0"
-                             Foreground="#5F718B"
-                             FontSize="10"/>
+                  <TextBlock Text="{Binding Name}" Foreground="#EDF5FF"
+                             FontSize="14" FontWeight="SemiBold"/>
+                  <TextBlock Text="{Binding Id}" Margin="0,3,0,0"
+                             Foreground="#5F718B" FontSize="10"/>
                 </StackPanel>
-
-                <TextBlock Grid.Column="1"
-                           Text="{Binding CoordinatesText}"
-                           Foreground="#B6C5D9"
-                           VerticalAlignment="Center"/>
-
-                <TextBlock Grid.Column="2"
-                           Text="{Binding PopulationText}"
-                           Foreground="#B6C5D9"
-                           VerticalAlignment="Center"/>
-
+                <TextBlock Grid.Column="1" Text="{Binding CoordinatesText}"
+                           Foreground="#B6C5D9" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="2" Text="{Binding PopulationText}"
+                           Foreground="#B6C5D9" VerticalAlignment="Center"/>
                 <StackPanel Grid.Column="3" VerticalAlignment="Center">
-                  <TextBlock Text="{Binding ResourcesText}"
-                             Foreground="#C6D5E8"
-                             FontSize="12"/>
-                  <TextBlock Text="{Binding StorageText}"
-                             Margin="0,3,0,0"
-                             Foreground="#60738E"
-                             FontSize="10"/>
+                  <TextBlock Text="{Binding ResourcesText}" Foreground="#C6D5E8" FontSize="12"/>
+                  <TextBlock Text="{Binding StorageText}" Margin="0,3,0,0"
+                             Foreground="#60738E" FontSize="10"/>
                 </StackPanel>
-
-                <TextBlock Grid.Column="4"
-                           Text="{Binding ProductionText}"
-                           Foreground="#C6D5E8"
-                           FontSize="12"
-                           TextWrapping="Wrap"
-                           VerticalAlignment="Center"/>
-
-                <TextBlock Grid.Column="5"
-                           Text="{Binding StatusText}"
+                <TextBlock Grid.Column="4" Text="{Binding ProductionText}"
+                           Foreground="#C6D5E8" FontSize="12"
+                           TextWrapping="Wrap" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="5" Text="{Binding StatusText}"
                            Foreground="{StaticResource TtwenSuccessBrush}"
-                           FontSize="11"
-                           VerticalAlignment="Center"/>
+                           FontSize="11" VerticalAlignment="Center"/>
               </Grid>
             </Border>
           </DataTemplate>

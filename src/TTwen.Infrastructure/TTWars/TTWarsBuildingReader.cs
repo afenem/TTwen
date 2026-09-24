@@ -8,27 +8,21 @@ namespace TTwen.Infrastructure.TTWars;
 /// <summary>
 /// TTWars dorf2.php sayfasından köy merkezi binalarını okuyan Playwright reader'ıdır.
 /// </summary>
-/// <remarks>
-/// Öncelik modern buildingSlot DOM'una, ardından klasik Travian/T3.6 village_map
-/// sınıflarına verilir. Tüm slotlar tek JavaScript değerlendirmesinde çıkarılır;
-/// her bina için ayrı build.php navigasyonu yapılmaz.
-/// </remarks>
 public sealed class TTWarsBuildingReader
 {
     private readonly IPage _page;
 
-    /// <summary>
-    /// Reader'ı belirli bir Playwright sayfasına bağlar.
-    /// </summary>
+    /// <summary>Reader'ı belirli bir Playwright sayfasına bağlar.</summary>
     public TTWarsBuildingReader(IPage page)
     {
         _page = page ?? throw new ArgumentNullException(nameof(page));
     }
 
     /// <summary>
-    /// Aktif köydeki bina slotlarını okur.
+    /// Belirtilen köyü seçer ve bina slotlarını tek DOM taramasında okur.
     /// </summary>
     public async Task<TTWarsBuildingReadResult> ReadAsync(
+        string? villageId,
         CancellationToken cancellationToken)
     {
         var capturedAtUtc = DateTimeOffset.UtcNow;
@@ -40,7 +34,23 @@ public sealed class TTWarsBuildingReader
             if (!Uri.TryCreate(_page.Url, UriKind.Absolute, out var currentUri))
                 throw new InvalidOperationException("Aktif Playwright URL'si geçersiz.");
 
-            var target = new Uri(currentUri, "dorf2.php");
+            if (!string.IsNullOrWhiteSpace(villageId))
+            {
+                var villageUri = new Uri(
+                    currentUri,
+                    $"dorf1.php?newdid={Uri.EscapeDataString(villageId)}");
+
+                await _page.GotoAsync(
+                    villageUri.AbsoluteUri,
+                    new PageGotoOptions
+                    {
+                        WaitUntil = WaitUntilState.DOMContentLoaded
+                    });
+
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+
+            var target = new Uri(new Uri(_page.Url), "dorf2.php");
 
             await _page.GotoAsync(
                 target.AbsoluteUri,
@@ -64,10 +74,9 @@ public sealed class TTWarsBuildingReader
 
             if (raw.Count == 0)
             {
-                var diagnostics = await ReadDiagnosticsAsync(cancellationToken);
                 return Failure(
                     "Bina slotları bulunamadı.",
-                    diagnostics,
+                    await ReadDiagnosticsAsync(cancellationToken),
                     capturedAtUtc,
                     _page.Url);
             }
@@ -78,24 +87,24 @@ public sealed class TTWarsBuildingReader
                 .Select(group => group.First())
                 .OrderBy(row => row.SlotId)
                 .Select(row => new BuildingSnapshot(
-                    SlotId: row.SlotId,
-                    Name: row.Name,
-                    Level: row.Level,
-                    Gid: row.Gid,
-                    IsOccupied: row.IsOccupied,
-                    IsUnderConstruction: row.IsUnderConstruction,
-                    SourceUrl: _page.Url))
+                    row.SlotId,
+                    row.Name,
+                    row.Level,
+                    row.Gid,
+                    row.IsOccupied,
+                    row.IsUnderConstruction,
+                    _page.Url))
                 .ToList();
 
             var occupied = buildings.Count(item => item.IsOccupied);
 
             return new TTWarsBuildingReadResult(
-                Success: true,
-                Buildings: buildings,
-                Message: $"{buildings.Count} bina slotu okundu ({occupied} dolu).",
-                Details: null,
-                CapturedAtUtc: capturedAtUtc,
-                SourceUrl: _page.Url);
+                true,
+                buildings,
+                $"{buildings.Count} bina slotu okundu ({occupied} dolu).",
+                null,
+                capturedAtUtc,
+                _page.Url);
         }
         catch (OperationCanceledException)
         {
@@ -119,28 +128,21 @@ public sealed class TTWarsBuildingReader
         }
     }
 
-    /// <summary>
-    /// Aktif sayfanın giriş sayfası olup olmadığını kontrol eder.
-    /// </summary>
-    private async Task<bool> IsLoginPageAsync(
-        CancellationToken cancellationToken)
+    /// <summary>Aktif sayfanın giriş sayfası olup olmadığını kontrol eder.</summary>
+    private async Task<bool> IsLoginPageAsync(CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
         if (Uri.TryCreate(_page.Url, UriKind.Absolute, out var uri)
             && uri.AbsolutePath.Contains("login", StringComparison.OrdinalIgnoreCase))
-        {
             return true;
-        }
 
         return await _page.Locator(
                 "form[action*='login'], input[type='password'], input[name='password']")
             .CountAsync() > 0;
     }
 
-    /// <summary>
-    /// Modern ve klasik bina işaretlerini tek DOM taramasında çıkarır.
-    /// </summary>
+    /// <summary>Modern ve klasik bina işaretlerini tek DOM taramasında çıkarır.</summary>
     private async Task<IReadOnlyList<BuildingRow>> ReadSlotRowsAsync(
         CancellationToken cancellationToken)
     {
@@ -156,9 +158,7 @@ public sealed class TTWarsBuildingReader
                   .replace(/[‪-‮‎‏]/g, '')
                   .replace(/−/g, '-')
                   .replace(/[^\d-]/g, '');
-
                 if (!text) return null;
-
                 const number = Number.parseInt(text, 10);
                 return Number.isFinite(number) ? number : null;
               };
@@ -178,7 +178,6 @@ public sealed class TTWarsBuildingReader
                   /\bgid[_-]?(\d{1,2})\b/i,
                   /\bg(\d{1,2})\b/i
                 ]);
-
                 return match ? Number(match[1]) : null;
               };
 
@@ -196,14 +195,11 @@ public sealed class TTWarsBuildingReader
               };
 
               const cleanName = text => {
-                let value = clean(text);
-
-                value = value
+                let value = clean(text)
                   .replace(/(?:^|\s)(?:gid|g|aid|slot)[_-]?\d{1,2}(?=\s|$)/gi, ' ')
                   .replace(/(?:^|\s)(?:level|seviye|niveau|stufe)[\s:_-]*\d{1,2}(?=\s|$)/gi, ' ')
                   .replace(/\s+/g, ' ')
                   .trim();
-
                 return value || 'Bina';
               };
 
@@ -213,7 +209,6 @@ public sealed class TTWarsBuildingReader
                   /(?:^|\s)slot[_-]?(\d{1,2})(?:\s|$)/i,
                   /[?&]id=(\d{1,2})(?:[^0-9]|$)/i
                 ]);
-
                 return match ? Number(match[1]) : null;
               };
 
@@ -227,16 +222,12 @@ public sealed class TTWarsBuildingReader
                 result.push(row);
               };
 
-              // Modern skins / T4-style markup.
               for (const slot of document.querySelectorAll('div.buildingSlot')) {
                 const anchor = slot.querySelector('a[href], area[href]');
                 const image = slot.querySelector('img.building, img[alt]');
                 const levelNode = slot.querySelector('.labelLayer, .level, .label, [data-level]');
-
                 const classText = clean(
-                  String(slot.className || '')
-                  + ' '
-                  + String(image?.className || '')
+                  String(slot.className || '') + ' ' + String(image?.className || '')
                 );
 
                 const attributes = [
@@ -254,26 +245,22 @@ public sealed class TTWarsBuildingReader
 
                 if (slotId === null) continue;
 
-                const displayText = clean(
-                  [
-                    slot.getAttribute('data-name') || '',
-                    image?.getAttribute('alt') || '',
-                    anchor?.getAttribute('title') || '',
-                    levelNode?.getAttribute('data-level') || '',
-                    levelNode?.textContent || '',
-                    slot.textContent || ''
-                  ].join(' ')
-                );
+                const displayText = clean([
+                  slot.getAttribute('data-name') || '',
+                  image?.getAttribute('alt') || '',
+                  anchor?.getAttribute('title') || '',
+                  levelNode?.getAttribute('data-level') || '',
+                  levelNode?.textContent || '',
+                  slot.textContent || ''
+                ].join(' '));
 
                 const gid = parseGid(attributes + ' ' + classText + ' ' + displayText);
-                const level = parseLevel(
-                  [
-                    slot.getAttribute('data-level') || '',
-                    levelNode?.getAttribute('data-level') || '',
-                    levelNode?.textContent || '',
-                    displayText
-                  ].join(' ')
-                );
+                const level = parseLevel([
+                  slot.getAttribute('data-level') || '',
+                  levelNode?.getAttribute('data-level') || '',
+                  levelNode?.textContent || '',
+                  displayText
+                ].join(' '));
 
                 const emptyText = /building\s+site|bina\s+arsas[ıi]|empty|boş/i.test(displayText);
 
@@ -294,25 +281,21 @@ public sealed class TTWarsBuildingReader
                 });
               }
 
-              // Classic Travian/T3.6 map images: d1..d20 -> slots 19..38.
-              for (const image of document.querySelectorAll(
-                '#village_map img.building, #village_map img[class*=" building "]'
-              )) {
+              for (const image of document.querySelectorAll('#village_map img.building')) {
                 const classText = clean(String(image.className || ''));
                 const slotMatch = classText.match(/(?:^|\s)d(\d{1,2})(?:\s|$)/i);
                 if (!slotMatch) continue;
 
-                const visualIndex = Number(slotMatch[1]);
-                if (visualIndex < 1 || visualIndex > 20) continue;
+                const index = Number(slotMatch[1]);
+                if (index < 1 || index > 20) continue;
 
-                const slotId = visualIndex + 18;
                 const alt = clean(image.getAttribute('alt') || '');
                 const gid = parseGid(classText + ' ' + alt);
                 const level = parseLevel(alt);
                 const empty = /building\s+site|bina\s+arsas[ıi]|empty|boş/i.test(alt);
 
                 add({
-                  SlotId: slotId,
+                  SlotId: index + 18,
                   Name: cleanName(alt),
                   Level: level,
                   Gid: gid,
@@ -323,14 +306,11 @@ public sealed class TTWarsBuildingReader
                 });
               }
 
-              // Classic level overlay provides reliable level values even when the
-              // building image itself has no textual level.
               for (const levelNode of document.querySelectorAll('#levels > div')) {
                 const classText = clean(String(levelNode.className || ''));
-                const text = clean(levelNode.textContent || '');
-                const level = parseNumber(text);
-
+                const level = parseNumber(levelNode.textContent || '');
                 const dMatch = classText.match(/(?:^|\s)d(\d{1,2})(?:\s|$)/i);
+
                 if (dMatch) {
                   add({
                     SlotId: Number(dMatch[1]) + 18,
@@ -343,21 +323,20 @@ public sealed class TTWarsBuildingReader
                   continue;
                 }
 
-                const specialMatch = classText.match(/(?:^|\s)l(39|40)(?:\s|$)/i);
-                if (specialMatch) {
+                const special = classText.match(/(?:^|\s)l(39|40)(?:\s|$)/i);
+                if (special) {
+                  const slotId = Number(special[1]);
                   add({
-                    SlotId: Number(specialMatch[1]),
-                    Name: Number(specialMatch[1]) === 39 ? 'Rally Point' : 'Surlar',
+                    SlotId: slotId,
+                    Name: slotId === 39 ? 'Rally Point' : 'Surlar',
                     Level: level,
-                    Gid: Number(specialMatch[1]) === 39 ? 16 : null,
+                    Gid: slotId === 39 ? 16 : null,
                     IsOccupied: level !== null,
                     IsUnderConstruction: false
                   });
                 }
               }
 
-              // Final compatibility fallback: image-map build.php links can still
-              // provide slot + title when visual classes are incomplete.
               for (const area of document.querySelectorAll(
                 'map#map2 area[href*="build.php?id="], map#map1 area[href*="build.php?id="]'
               )) {
@@ -397,9 +376,7 @@ public sealed class TTWarsBuildingReader
             rawJson ?? "[]") ?? [];
     }
 
-    /// <summary>
-    /// Selector tanılaması üretir.
-    /// </summary>
+    /// <summary>Selector tanılaması üretir.</summary>
     private async Task<string> ReadDiagnosticsAsync(
         CancellationToken cancellationToken)
     {
@@ -410,21 +387,15 @@ public sealed class TTWarsBuildingReader
             () => JSON.stringify({
               url: location.href,
               title: document.title,
-              buildingSlots:
-                document.querySelectorAll('div.buildingSlot').length,
-              villageBuildingImages:
-                document.querySelectorAll('#village_map img.building, #village_map img[class*=" building "]').length,
-              levelNodes:
-                document.querySelectorAll('#levels > div').length,
-              buildLinks:
-                document.querySelectorAll('a[href*="build.php?id="], area[href*="build.php?id="]').length
+              buildingSlots: document.querySelectorAll('div.buildingSlot').length,
+              villageBuildingImages: document.querySelectorAll('#village_map img.building').length,
+              levelNodes: document.querySelectorAll('#levels > div').length,
+              buildLinks: document.querySelectorAll('a[href*="build.php?id="], area[href*="build.php?id="]').length
             })
             """);
     }
 
-    /// <summary>
-    /// Standart bina okuma hatası sonucu oluşturur.
-    /// </summary>
+    /// <summary>Standart bina okuma hatası sonucu oluşturur.</summary>
     private static TTWarsBuildingReadResult Failure(
         string message,
         string? details,
@@ -432,17 +403,14 @@ public sealed class TTWarsBuildingReader
         string sourceUrl)
     {
         return new TTWarsBuildingReadResult(
-            Success: false,
-            Buildings: Array.Empty<BuildingSnapshot>(),
-            Message: message,
-            Details: details,
-            CapturedAtUtc: capturedAtUtc,
-            SourceUrl: sourceUrl);
+            false,
+            Array.Empty<BuildingSnapshot>(),
+            message,
+            details,
+            capturedAtUtc,
+            sourceUrl);
     }
 
-    /// <summary>
-    /// JavaScript sonucunun C# taşıma modelidir.
-    /// </summary>
     private sealed record BuildingRow(
         int SlotId,
         string Name,
