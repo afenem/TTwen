@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <!--
+    Workaround for the current unpackaged WinUI publish issue where the app's
+    own PRI file is generated during build but omitted from dotnet publish.
+    The missing PRI can cause Microsoft.UI.Xaml.dll 0xC000027B at startup.
+    Scope is limited to the self-contained unpackaged WinUI executable.
+  -->
+  <Target
+    Name="AddProjectPriToResolvedFileToPublish"
+    BeforeTargets="ComputeResolvedFilesToPublishList"
+    DependsOnTargets="$(GenerateProjectPriFile)"
+    Condition="'$(WindowsPackageType)' == 'None' and '$(WindowsAppSDKSelfContained)' == 'true' and '$(OutputType)' == 'WinExe'">
+    <ItemGroup>
+      <ResolvedFileToPublish
+        Include="$(ProjectPriFullPath)"
+        Condition="Exists('$(ProjectPriFullPath)')">
+        <RelativePath>$(ProjectPriFileName)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
+</Project>
