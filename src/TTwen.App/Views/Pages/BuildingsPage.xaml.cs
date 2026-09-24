@@ -128,12 +128,16 @@ public sealed partial class BuildingsPage : Page
         /// <summary>Travian bina grup kimliğidir.</summary>
         public string Gid { get; }
 
+        /// <summary>Canlı bina slotunun dolu olup olmadığını belirtir.</summary>
+        public bool IsOccupied { get; }
+
         /// <summary>Canlı veri durumudur.</summary>
         public string Status { get; }
 
         /// <summary>Snapshot'ı kullanıcıya gösterilecek satıra dönüştürür.</summary>
         public BuildingRow(BuildingSnapshot snapshot)
         {
+            IsOccupied = snapshot.IsOccupied;
             SlotId = snapshot.SlotId.ToString(CultureInfo.InvariantCulture);
             Name = snapshot.IsOccupied ? snapshot.Name : "Bina arsası";
             Level = snapshot.Level?.ToString(CultureInfo.InvariantCulture) ?? "—";
